@@ -25,7 +25,7 @@
         .post-author-info { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
         .author-name { font-weight: bold; color: #050505; font-size: 15px; }
         
-        /* زر الحذف */
+        /* زر الحذف في الأعلى */
         .delete-btn { background: none; border: none; color: #ff4d4d; font-size: 13px; font-weight: bold; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: background 0.2s; }
         .delete-btn:hover { background-color: #ffe6e6; }
         
@@ -34,19 +34,19 @@
         .post-content-image img { width: 100%; height: auto; max-height: 450px; object-fit: contain; }
         .post-stats { padding: 10px 16px; display: flex; justify-content: space-between; color: #65676b; font-size: 13px; border-bottom: 1px solid #e4e6eb; }
         
-        /* أزرار الفيسبوك */
+        /* أزرار التفاعل أسفل المنشور */
         .post-actions { padding: 4px; display: flex; justify-content: space-around; background-color: #fcfcfc; border-bottom: 1px solid #e4e6eb; }
         .action-button { width: 48%; background: none; border: none; padding: 8px; color: #65676b; font-size: 14px; font-weight: bold; cursor: pointer; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s; }
         .action-button:hover { background-color: #f2f2f2; }
         .action-button.liked { color: #1877f2; }
 
-        /* صندوق وقائمة التعليقات الجديدة (شبيه الفيسبوك) */
+        /* قسم التعليقات المطور */
         .comments-section { background-color: #f8f9fa; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
-        .comment-input-box { display: flex; gap: 8px; margin-bottom: 8px; }
+        .comment-input-box { display: flex; gap: 8px; margin-bottom: 4px; }
         .comment-input { flex: 1; padding: 8px 12px; border: 1px solid #ccd0d5; border-radius: 20px; font-size: 14px; outline: none; background-color: white; }
         .comment-submit-btn { background-color: #1877f2; color: white; border: none; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer; }
-        .comments-list { display: flex; flex-direction: column; gap: 6px; }
-        .single-comment { background-color: #e4e6eb; padding: 8px 12px; border-radius: 18px; font-size: 13px; max-width: 85%; align-self: flex-start; line-height: 1.4; }
+        .comments-list { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+        .single-comment { background-color: #e4e6eb; padding: 8px 12px; border-radius: 18px; font-size: 13px; max-width: 90%; align-self: flex-start; line-height: 1.4; }
         .comment-user { font-weight: bold; color: #050505; margin-bottom: 2px; display: block; }
     </style>
 </head>
@@ -97,7 +97,6 @@
                 let imgHtml = post.image ? `<div class="post-content-image"><img src="${post.image}"></div>` : '';
                 let postComments = post.comments || [];
                 
-                // بناء كود التعليقات التي ستظهر تحت المنشور
                 let commentsHtml = "";
                 postComments.forEach(comm => {
                     commentsHtml += `<div class="single-comment"><span class="comment-user">متابع الدليل</span>${comm}</div>`;
@@ -117,7 +116,6 @@
                         <button class="action-button ${post.isLiked ? 'liked' : ''}" onclick="pressLike(${idx})">👍 إعجاب</button>
                         <button class="action-button" onclick="focusCommentField(${idx})">💬 تعليق</button>
                     </div>
-                    <!-- قسم التعليقات المطور أسفل البطاقة -->
                     <div class="comments-section">
                         <div class="comment-input-box">
                             <input type="text" id="input-${idx}" class="comment-input" placeholder="اكتب تعليقاً...">
@@ -153,3 +151,8 @@
         window.pressDelete = function(idx) {
             if (confirm("هل أنت متأكد من رغبتك في حذف هذا الإعلان نهائياً؟")) {
                 localPostsData.splice(idx, 1);
+                localStorage.setItem('market_posts', JSON.stringify(localPostsData));
+                renderFeed();
+            }
+        };
+
