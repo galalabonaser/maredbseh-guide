@@ -25,7 +25,7 @@
         .post-author-info { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
         .author-name { font-weight: bold; color: #050505; font-size: 15px; }
         
-        /* زر الحذف الأنيق في الأعلى */
+        /* زر الحذف */
         .delete-btn { background: none; border: none; color: #ff4d4d; font-size: 13px; font-weight: bold; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: background 0.2s; }
         .delete-btn:hover { background-color: #ffe6e6; }
         
@@ -34,11 +34,20 @@
         .post-content-image img { width: 100%; height: auto; max-height: 450px; object-fit: contain; }
         .post-stats { padding: 10px 16px; display: flex; justify-content: space-between; color: #65676b; font-size: 13px; border-bottom: 1px solid #e4e6eb; }
         
-        /* أزرار الفيسبوك التفاعلية أسفل المنشور */
-        .post-actions { padding: 4px; display: flex; justify-content: space-around; background-color: #fcfcfc; }
+        /* أزرار الفيسبوك */
+        .post-actions { padding: 4px; display: flex; justify-content: space-around; background-color: #fcfcfc; border-bottom: 1px solid #e4e6eb; }
         .action-button { width: 48%; background: none; border: none; padding: 8px; color: #65676b; font-size: 14px; font-weight: bold; cursor: pointer; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s; }
         .action-button:hover { background-color: #f2f2f2; }
         .action-button.liked { color: #1877f2; }
+
+        /* صندوق وقائمة التعليقات الجديدة (شبيه الفيسبوك) */
+        .comments-section { background-color: #f8f9fa; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+        .comment-input-box { display: flex; gap: 8px; margin-bottom: 8px; }
+        .comment-input { flex: 1; padding: 8px 12px; border: 1px solid #ccd0d5; border-radius: 20px; font-size: 14px; outline: none; background-color: white; }
+        .comment-submit-btn { background-color: #1877f2; color: white; border: none; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer; }
+        .comments-list { display: flex; flex-direction: column; gap: 6px; }
+        .single-comment { background-color: #e4e6eb; padding: 8px 12px; border-radius: 18px; font-size: 13px; max-width: 85%; align-self: flex-start; line-height: 1.4; }
+        .comment-user { font-weight: bold; color: #050505; margin-bottom: 2px; display: block; }
     </style>
 </head>
 <body>
@@ -75,7 +84,7 @@
             image: "",
             likes: 5, 
             isLiked: false,
-            commentsCount: 2
+            comments: ["موقع ممتاز بالتوفيق!", "كم السعر المطلق لو سمحت؟"]
         }];
 
         function renderFeed() {
@@ -86,8 +95,14 @@
                 const card = document.createElement('div');
                 card.className = 'post-card';
                 let imgHtml = post.image ? `<div class="post-content-image"><img src="${post.image}"></div>` : '';
-                let commentsNum = post.commentsCount || 0;
+                let postComments = post.comments || [];
                 
+                // بناء كود التعليقات التي ستظهر تحت المنشور
+                let commentsHtml = "";
+                postComments.forEach(comm => {
+                    commentsHtml += `<div class="single-comment"><span class="comment-user">متابع الدليل</span>${comm}</div>`;
+                });
+
                 card.innerHTML = `
                     <div class="post-author-info">
                         <span class="author-name">مُعلن في دليل معردبسة</span>
@@ -96,15 +111,19 @@
                     <div class="post-content-text">${post.text}</div>${imgHtml}
                     <div class="post-stats">
                         <span>👍 <span>${post.likes}</span> إعجاب</span>
-                        <span>💬 <span>${commentsNum}</span> تعليق</span>
+                        <span>💬 <span>${postComments.length}</span> تعليق</span>
                     </div>
                     <div class="post-actions">
-                        <button class="action-button ${post.isLiked ? 'liked' : ''}" onclick="pressLike(${idx})">
-                            👍 <span>إعجاب</span>
-                        </button>
-                        <button class="action-button" onclick="pressComment(${idx})">
-                            💬 <span>تعليق</span>
-                        </button>
+                        <button class="action-button ${post.isLiked ? 'liked' : ''}" onclick="pressLike(${idx})">👍 إعجاب</button>
+                        <button class="action-button" onclick="focusCommentField(${idx})">💬 تعليق</button>
+                    </div>
+                    <!-- قسم التعليقات المطور أسفل البطاقة -->
+                    <div class="comments-section">
+                        <div class="comment-input-box">
+                            <input type="text" id="input-${idx}" class="comment-input" placeholder="اكتب تعليقاً...">
+                            <button class="comment-submit-btn" onclick="addCommentFromInput(${idx})">إرسال</button>
+                        </div>
+                        <div class="comments-list">${commentsHtml}</div>
                     </div>`;
                 feedContainer.appendChild(card);
             });
@@ -116,45 +135,21 @@
             renderFeed();
         };
 
-        window.pressComment = function(idx) {
-            let commentText = prompt("اكتب تعليقك على هذا المنشور:");
-            if (commentText && commentText.trim() !== "") {
-                if(!localPostsData[idx].commentsCount) localPostsData[idx].commentsCount = 0;
-                localPostsData[idx].commentsCount++;
+        window.focusCommentField = function(idx) {
+            const inputField = document.getElementById(`input-${idx}`);
+            if(inputField) inputField.focus();
+        };
+
+        window.addCommentFromInput = function(idx) {
+            const inputField = document.getElementById(`input-${idx}`);
+            if (inputField && inputField.value.trim() !== "") {
+                if(!localPostsData[idx].comments) localPostsData[idx].comments = [];
+                localPostsData[idx].comments.push(inputField.value.trim());
                 localStorage.setItem('market_posts', JSON.stringify(localPostsData));
                 renderFeed();
-                alert("تم إضافة تعليقك بنجاح!");
             }
         };
 
         window.pressDelete = function(idx) {
             if (confirm("هل أنت متأكد من رغبتك في حذف هذا الإعلان نهائياً؟")) {
                 localPostsData.splice(idx, 1);
-                localStorage.setItem('market_posts', JSON.stringify(localPostsData));
-                renderFeed();
-            }
-        };
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const imageInput = document.getElementById('imageInput'), imagePreview = document.getElementById('imagePreview'), previewContainer = document.getElementById('previewContainer'), publishBtn = document.getElementById('publishBtn'), postText = document.getElementById('postText');
-            
-            imageInput.addEventListener('change', function() {
-                if (this.files && this.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) { uploadedImageBase64 = e.target.result; imagePreview.src = uploadedImageBase64; previewContainer.style.display = 'block'; };
-                    reader.readAsDataURL(this.files[0]);
-                }
-            });
-
-            publishBtn.addEventListener('click', () => {
-                if (!postText.value.trim() && !uploadedImageBase64) return alert('اكتب تفاصيل أو اختر صورة!');
-                localPostsData.unshift({ text: postText.value.trim(), image: uploadedImageBase64, likes: 0, isLiked: false, commentsCount: 0 });
-                localStorage.setItem('market_posts', JSON.stringify(localPostsData));
-                postText.value = ""; imageInput.value = ""; uploadedImageBase64 = ""; previewContainer.style.display = 'none'; imagePreview.src = "";
-                renderFeed();
-            });
-            renderFeed();
-        });
-    </script>
-</body>
-</html>
