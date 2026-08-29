@@ -91,7 +91,6 @@
                 card.innerHTML = `
                     <div class="post-author-info">
                         <span class="author-name">مُعلن في دليل معردبسة</span>
-                        <!-- زر الحذف الذكي في الأعلى -->
                         <button class="delete-btn" onclick="pressDelete(${idx})">🗑️ حذف</button>
                     </div>
                     <div class="post-content-text">${post.text}</div>${imgHtml}
@@ -99,7 +98,6 @@
                         <span>👍 <span>${post.likes}</span> إعجاب</span>
                         <span>💬 <span>${commentsNum}</span> تعليق</span>
                     </div>
-                    <!-- أزرار الفيسبوك التفاعلية المزدوجة (إعجاب + تعليق) في الأسفل -->
                     <div class="post-actions">
                         <button class="action-button ${post.isLiked ? 'liked' : ''}" onclick="pressLike(${idx})">
                             👍 <span>إعجاب</span>
