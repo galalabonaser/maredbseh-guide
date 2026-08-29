@@ -19,9 +19,16 @@
         .image-preview-container { display: none; width: 100%; max-height: 250px; border-radius: 8px; overflow: hidden; background: #f0f2f5; text-align: center; }
         .image-preview-container img { max-width: 100%; max-height: 250px; object-fit: contain; }
         .btn-publish { background-color: #1877f2; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; }
+        
+        /* تنسيق المنشورات المطور */
         .post-card { background: white; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e4e6eb; display: flex; flex-direction: column; overflow: hidden; margin-top: 16px; }
-        .post-author-info { padding: 12px 16px; display: flex; flex-direction: column; }
+        .post-author-info { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
         .author-name { font-weight: bold; color: #050505; font-size: 15px; }
+        
+        /* تنسيق زر الحذف الأنيق */
+        .delete-btn { background: none; border: none; color: #ff4d4d; font-size: 13px; font-weight: bold; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: background 0.2s; }
+        .delete-btn:hover { background-color: #ffe6e6; }
+        
         .post-content-text { padding: 0 16px 12px 16px; font-size: 15px; line-height: 1.5; color: #050505; white-space: pre-wrap; }
         .post-content-image { width: 100%; max-height: 450px; overflow: hidden; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; }
         .post-content-image img { width: 100%; height: auto; max-height: 450px; object-fit: contain; }
@@ -59,10 +66,13 @@
 
     <script>
         let uploadedImageBase64 = "";
-        let localPostsData = [{
+        
+        // جلب المنشورات القديمة من ذاكرة المتصفح أو وضع المنشور الافتراضي إذا كانت فارغة
+        let localPostsData = JSON.parse(localStorage.getItem('market_posts')) || [{
             text: "للبيع منزل في وسط معردبسة، مساحة ممتازة وجاهز للسكن فوراً.",
-            image: "https://unsplash.com",
-            likes: 5, isLiked: false
+            image: "",
+            likes: 5, 
+            isLiked: false
         }];
 
         function renderFeed() {
@@ -74,7 +84,11 @@
                 card.className = 'post-card';
                 let imgHtml = post.image ? `<div class="post-content-image"><img src="${post.image}"></div>` : '';
                 card.innerHTML = `
-                    <div class="post-author-info"><span class="author-name">مُعلن في دليل معردبسة</span></div>
+                    <div class="post-author-info">
+                        <span class="author-name">مُعلن في دليل معردبسة</span>
+                        <!-- زر الحذف المضاف حديثاً -->
+                        <button class="delete-btn" onclick="pressDelete(${idx})">🗑️ حذف</button>
+                    </div>
                     <div class="post-content-text">${post.text}</div>${imgHtml}
                     <div class="post-stats"><span>👍 <span>${post.likes}</span> إعجاب</span></div>
                     <div class="post-actions"><button class="like-button ${post.isLiked ? 'liked' : ''}" onclick="pressLike(${idx})">👍 إعجاب</button></div>`;
@@ -84,7 +98,17 @@
 
         window.pressLike = function(idx) {
             localPostsData[idx].isLiked ? (localPostsData[idx].likes--, localPostsData[idx].isLiked = false) : (localPostsData[idx].likes++, localPostsData[idx].isLiked = true);
+            localStorage.setItem('market_posts', JSON.stringify(localPostsData)); // حفظ حالة الإعجاب
             renderFeed();
+        };
+
+        // دالة الحذف الذكية الجديدة [1]
+        window.pressDelete = function(idx) {
+            if (confirm("هل أنت متأكد من رغبتك في حذف هذا الإعلان نهائياً؟")) {
+                localPostsData.splice(idx, 1); // مسح المنشور من المصفوفة
+                localStorage.setItem('market_posts', JSON.stringify(localPostsData)); // حفظ التغييرات في الذاكرة المحلية [1]
+                renderFeed(); // إعادة عرض القائمة
+            }
         };
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -101,6 +125,7 @@
             publishBtn.addEventListener('click', () => {
                 if (!postText.value.trim() && !uploadedImageBase64) return alert('اكتب تفاصيل أو اختر صورة!');
                 localPostsData.unshift({ text: postText.value.trim(), image: uploadedImageBase64, likes: 0, isLiked: false });
+                localStorage.setItem('market_posts', JSON.stringify(localPostsData)); // حفظ المنشور الجديد فوراً في الذاكرة [1]
                 postText.value = ""; imageInput.value = ""; uploadedImageBase64 = ""; previewContainer.style.display = 'none'; imagePreview.src = "";
                 renderFeed();
             });
