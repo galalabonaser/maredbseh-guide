@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>قسم أبحث عن عمل</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قسم أبحث عن عمل</title>
     <style>
         @import url('https://googleapis.com');
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; }
@@ -12,66 +14,142 @@
         .create-post-card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 12px; border: 1px solid #e4e6eb; }
         .post-textarea { width: 100%; min-height: 80px; border: none; resize: none; font-size: 16px; outline: none; color: #050505; }
         .post-options { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e4e6eb; padding-top: 12px; }
-        .upload-label { display: flex; align-items: center; gap: 8px; color: #02b2cd; font-weight: bold; cursor: pointer; font-size: 14px; padding: 8px 12px; border-radius: 8px; border: 1px dashed #17a2b8; }
+        .upload-label { display: flex; align-items: center; gap: 8px; color: #17a2b8; font-weight: bold; cursor: pointer; font-size: 14px; padding: 8px 12px; border-radius: 8px; border: 1px dashed #17a2b8; }
         .upload-label input { display: none; }
         .image-preview-container { display: none; width: 100%; max-height: 250px; border-radius: 8px; overflow: hidden; background: #f0f2f5; text-align: center; }
         .image-preview-container img { max-width: 100%; max-height: 250px; object-fit: contain; }
         .btn-publish { background-color: #17a2b8; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; }
+        
         .post-card { background: white; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e4e6eb; display: flex; flex-direction: column; overflow: hidden; margin-top: 16px; }
-        .post-author-info { padding: 12px 16px; display: flex; flex-direction: column; }
+        .post-author-info { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
         .author-name { font-weight: bold; color: #050505; font-size: 15px; }
+        
+        .delete-btn { background: none; border: none; color: #ff4d4d; font-size: 13px; font-weight: bold; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: background 0.2s; }
+        .delete-btn:hover { background-color: #ffe6e6; }
+        
         .post-content-text { padding: 0 16px 12px 16px; font-size: 15px; line-height: 1.5; color: #050505; white-space: pre-wrap; }
         .post-content-image { width: 100%; max-height: 450px; overflow: hidden; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; }
         .post-content-image img { width: 100%; height: auto; max-height: 450px; object-fit: contain; }
         .post-stats { padding: 10px 16px; display: flex; justify-content: space-between; color: #65676b; font-size: 13px; border-bottom: 1px solid #e4e6eb; }
-        .post-actions { padding: 4px; display: flex; justify-content: space-between; border-bottom: 1px solid #e4e6eb; }
-        .action-button { width: 50%; background: none; border: none; padding: 8px; color: #65676b; font-size: 14px; font-weight: bold; cursor: pointer; text-align: center; }
+        
+        .post-actions { padding: 4px; display: flex; justify-content: space-around; background-color: #fcfcfc; border-bottom: 1px solid #e4e6eb; }
+        .action-button { width: 48%; background: none; border: none; padding: 8px; color: #65676b; font-size: 14px; font-weight: bold; cursor: pointer; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s; }
+        .action-button:hover { background-color: #f2f2f2; }
         .action-button.liked { color: #17a2b8; }
+
         .comments-section { background-color: #f8f9fa; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
-        .comments-list { display: flex; flex-direction: column; gap: 6px; }
-        .comment-item { background: #e4e6eb; padding: 8px 12px; border-radius: 15px; font-size: 14px; max-width: 85%; align-self: flex-start; }
-        .comment-item strong { color: #050505; display: block; font-size: 12px; }
-        .comment-input-box { display: flex; gap: 8px; margin-top: 8px; }
-        .comment-input { flex: 1; border: 1px solid #ccd0d5; padding: 8px 12px; border-radius: 20px; outline: none; font-size: 14px; }
-        .btn-comment-submit { background-color: #17a2b8; color: white; border: none; padding: 0 15px; border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer; }
+        .comment-input-box { display: flex; gap: 8px; margin-bottom: 4px; }
+        .comment-input { flex: 1; padding: 8px 12px; border: 1px solid #ccd0d5; border-radius: 20px; font-size: 14px; outline: none; background-color: white; }
+        .comment-submit-btn { background-color: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer; }
+        .comments-list { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+        .single-comment { background-color: #e4e6eb; padding: 8px 12px; border-radius: 18px; font-size: 13px; max-width: 90%; align-self: flex-start; line-height: 1.4; }
+        .comment-user { font-weight: bold; color: #050505; margin-bottom: 2px; display: block; }
     </style>
 </head>
 <body>
-    <div class="jobs-header"><a href="home.html" class="back-btn">⬅ عودة للرئيسية</a><h1>💼 قسم أبحث عن عمل</h1><div style="width: 90px;"></div></div>
+
+    <div class="jobs-header">
+        <a href="home.html" class="back-btn">⬅ عودة للرئيسية</a>
+        <h1>💼 قسم أبحث عن عمل</h1>
+        <div style="width: 90px;"></div>
+    </div>
+
     <div class="container">
         <div class="create-post-card">
-            <h3>أعلن عن مهنتك أو اطلب وظيفة</h3>
-            <textarea id="postText" class="post-textarea" placeholder="اكتب مهاراتك، خبراتك، مهنتك الحرة، وطريقة التواصل معك هنا..."></textarea>
-            <div class="image-preview-container" id="previewContainer"><img id="imagePreview" src="" alt="معاينة"></div>
+            <h3>أنشئ منشوراً للبحث عن عمل أو الإعلان عن مهنتك</h3>
+            <textarea id="postText" class="post-textarea" placeholder="اكتب تخصصك، خبراتك أو تفاصيل الوظيفة المطلوبة..."></textarea>
+            <div class="image-preview-container" id="previewContainer">
+                <img id="imagePreview" src="" alt="معاينة">
+            </div>
             <div class="post-options">
-                <label class="upload-label">📷 <span>إرفاق نماذج من عملك</span><input type="file" id="imageInput" accept="image/*"></label>
+                <label class="upload-label">
+                    📷 <span>إضافة صورة (شهادة / نموذج عمل)</span>
+                    <input type="file" id="imageInput" accept="image/*">
+                </label>
                 <button id="publishBtn" class="btn-publish">نشر الإعلان</button>
             </div>
         </div>
         <div id="postsFeed"></div>
     </div>
+
     <script>
-        let imgB64 = "";
-        let posts = [{ text: "معلم ديكورات وجميع أعمال الدهان والترميم في معردبسة والقرى المجاورة، خبرة طويلة وأسعار مناسبة للجميع.", image: "https://unsplash.com", likes: 8, isLiked: false, comments: [{ user: "أبو أحمد", text: "ما شاء الله شغل نظيف!" }] }];
+        let uploadedImageBase64 = "";
+        
+        let localPostsData = JSON.parse(localStorage.getItem('jobs_posts')) || [{
+            text: "باحث عن عمل / صاحب مهنة\nمرحباً كيف الحال",
+            image: "",
+            likes: 2, 
+            isLiked: false,
+            comments: ["بالتوفيق ان شاء الله", "تواصل معي على الخاص"]
+        }];
+
         function renderFeed() {
-            const feed = document.getElementById('postsFeed'); if (!feed) return; feed.innerHTML = "";
-            posts.forEach((p, i) => {
-                const card = document.createElement('div'); card.className = 'post-card';
-                let imgHtml = p.image ? `<div class="post-content-image"><img src="${p.image}"></div>` : '';
-                let cHtml = ""; p.comments.forEach(c => { cHtml += `<div class="comment-item"><strong>${c.user}</strong>${c.text}</div>`; });
-                card.innerHTML = `<div class="post-author-info"><span class="author-name">باحث عن عمل / صاحب مهنة</span></div><div class="post-content-text">${p.text}</div>${imgHtml}<div class="post-stats"><span>👍 <span>${p.likes}</span> إعجاب</span><span>💬 <span>${p.comments.length}</span> تعليق</span></div><div class="post-actions"><button class="action-button ${p.isLiked ? 'liked' : ''}" onclick="goLike(${i})">👍 إعجاب</button><button class="action-button" onclick="goFocus(${i})">💬 تعليق</button></div><div class="comments-section"><div class="comments-list">${cHtml}</div><div class="comment-input-box"><input type="text" id="c-in-${i}" class="comment-input" placeholder="اكتب تعليقاً..."><button class="btn-comment-submit" onclick="goComm(${i})">إرسال</button></div></div>`;
-                feed.appendChild(card);
+            const feedContainer = document.getElementById('postsFeed');
+            if (!feedContainer) return;
+            feedContainer.innerHTML = "";
+            localPostsData.forEach((post, idx) => {
+                const card = document.createElement('div');
+                card.className = 'post-card';
+                let imgHtml = post.image ? `<div class="post-content-image"><img src="${post.image}"></div>` : '';
+                let postComments = post.comments || [];
+                
+                let commentsHtml = "";
+                postComments.forEach(comm => {
+                    commentsHtml += `<div class="single-comment"><span class="comment-user">متابع الدليل</span>${comm}</div>`;
+                });
+
+                card.innerHTML = `
+                    <div class="post-author-info">
+                        <span class="author-name">مُعلن في دليل معردبسة</span>
+                        <button class="delete-btn" onclick="pressDelete(${idx})">🗑️ حذف</button>
+                    </div>
+                    <div class="post-content-text">${post.text}</div>${imgHtml}
+                    <div class="post-stats">
+                        <span>👍 <span>${post.likes}</span> إعجاب</span>
+                        <span>💬 <span>${postComments.length}</span> تعليق</span>
+                    </div>
+                    <div class="post-actions">
+                        <button class="action-button ${post.isLiked ? 'liked' : ''}" onclick="pressLike(${idx})">👍 إعجاب</button>
+                        <button class="action-button" onclick="focusCommentField(${idx})">💬 تعليق</button>
+                    </div>
+                    <div class="comments-section">
+                        <div class="comment-input-box">
+                            <input type="text" id="input-${idx}" class="comment-input" placeholder="اكتب تعليقاً...">
+                            <button class="comment-submit-btn" onclick="addCommentFromInput(${idx})">إرسال</button>
+                        </div>
+                        <div class="comments-list">${commentsHtml}</div>
+                    </div>`;
+                feedContainer.appendChild(card);
             });
         }
-        window.goLike = function(i) { posts[i].isLiked ? (posts[i].likes--, posts[i].isLiked = false) : (posts[i].likes++, posts[i].isLiked = true); renderFeed(); };
-        window.goFocus = function(i) { const inp = document.getElementById(`c-in-${i}`); if(inp) inp.focus(); };
-        window.goComm = function(i) { const inp = document.getElementById(`c-in-${i}`); if (!inp || !inp.value.trim()) return; posts[i].comments.push({ user: "زائر الدليل", text: inp.value.trim() }); renderFeed(); };
-        document.addEventListener('DOMContentLoaded', () => {
-            const fileIn = document.getElementById('imageInput'), preview = document.getElementById('imagePreview'), box = document.getElementById('previewContainer'), btn = document.getElementById('publishBtn'), txt = document.getElementById('postText');
-            fileIn.addEventListener('change', function() { if (this.files && this.files[0]) { const reader = new FileReader(); reader.onload = function(e) { imgB64 = e.target.result; preview.src = imgB64; box.style.display = 'block'; }; reader.readAsDataURL(this.files[0]); } });
-            btn.addEventListener('click', () => { if (!txt.value.trim() && !imgB64) return alert('اكتب شيئاً!'); posts.unshift({ text: txt.value.trim(), image: imgB64, likes: 0, isLiked: false, comments: [] }); txt.value = ""; fileIn.value = ""; imgB64 = ""; box.style.display = 'none'; preview.src = ""; renderFeed(); });
+
+        window.pressLike = function(idx) {
+            localPostsData[idx].isLiked ? (localPostsData[idx].likes--, localPostsData[idx].isLiked = false) : (localPostsData[idx].likes++, localPostsData[idx].isLiked = true);
+            localStorage.setItem('jobs_posts', JSON.stringify(localPostsData));
             renderFeed();
-        });
-    </script>
-</body>
-</html>
+        };
+
+        window.focusCommentField = function(idx) {
+            const inputField = document.getElementById(`input-${idx}`);
+            if(inputField) inputField.focus();
+        };
+
+        window.addCommentFromInput = function(idx) {
+            const inputField = document.getElementById(`input-${idx}`);
+            if (inputField && inputField.value.trim() !== "") {
+                if(!localPostsData[idx].comments) localPostsData[idx].comments = [];
+                localPostsData[idx].comments.push(inputField.value.trim());
+                localStorage.setItem('jobs_posts', JSON.stringify(localPostsData));
+                renderFeed();
+            }
+        };
+
+        window.pressDelete = function(idx) {
+            if (confirm("هل أنت متأكد من رغبتك في حذف هذا المنشور نهائياً؟")) {
+                localPostsData.splice(idx, 1);
+                localStorage.setItem('jobs_posts', JSON.stringify(localPostsData));
+                renderFeed();
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
