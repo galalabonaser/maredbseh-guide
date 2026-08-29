@@ -1,0 +1,16 @@
+{
+  "short_name": "دليل معردبسة",
+  "name": "دليل خدمات معردبسة والقرى المحيطة بها",
+  "icons": [
+    {
+      "src": "https://flaticon.com",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/index.html",
+  "background_color": "#0056b3",
+  "theme_color": "#0056b3",
+  "display": "standalone",
+  "orientation": "portrait"
+}
