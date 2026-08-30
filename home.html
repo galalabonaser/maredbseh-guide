@@ -141,7 +141,27 @@
                 isPaused = false;
                 document.getElementById('adminCarouselBtn').textContent = '⏸️ إيقاف الإعلان (خاص بالمدير)';
             }
-        });
+        }); // دالة الربط السحابي الفوري لإعلانات دليل معردبسة
+const FIREBASE_URL = "https://firebaseio.com";
+
+async function fetchCloudAds() {
+    try {
+        const response = await fetch(FIREBASE_URL);
+        const data = await response.json();
+        if (data) {
+            const badges = document.querySelectorAll('.slide-text-badge');
+            if(badges.length >= 3) {
+                if(data.ad1) badges[0].innerText = data.ad1;
+                if(data.ad2) badges[1].innerText = data.ad2;
+                if(data.ad3) badges[2].innerText = data.ad3;
+            }
+        }
+    } catch (error) {
+        console.log("جاري تشغيل الإعلانات المحلية الافتراضية...");
+    }
+}
+document.addEventListener("DOMContentLoaded", fetchCloudAds);
+
     </script>
 </body>
 </html>
