@@ -1,2 +1,21 @@
-// مكتبة Firebase الأساسية وقواعد البيانات مدمجة معاً
-!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports):"function"==typeof define&&define.amd?define(["exports"],t):t((e="undefined"!=typeof globalThis?globalThis:e||self).firebase=e.firebase||{})}(this,(function(e){"use strict";var t=function(e){return function(t){if(!t)throw new Error("No database URL provided");var r=t.endsWith("/")?t:t+"/";return{ref:function(t){return{on:function(n,a){var o=new XMLHttpRequest;o.open("GET",r+t+".json"),o.onload=function(){if(200===o.status){var t=JSON.parse(o.responseText);a({val:function(){return t}})}};var i=setInterval((function(){o.open("GET",r+t+".json"),o.send()}),3e3);o.send()}}}}}};e.initializeApp=function(e){this.databaseURL=e.databaseURL},e.database=function(){return t(this.databaseURL)},Object.defineProperty(e,"__esModule",{value:!0})}));
+// استدعاء حزم الفايربيز المعتمدة من Google للمتصفحات
+import { initializeApp } from "https://gstatic.com";
+import { getDatabase, ref, set, onValue } from "https://gstatic.com";
+
+// ⚠️ ضع بيانات مشروعك الحقيقي من لوحة تحكم Firebase هنا
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_://firebaseapp.com",
+    databaseURL: "https://YOUR_PROJECT_://firebaseio.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_://appspot.com",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID"
+};
+
+// تشغيل الفايربيز وربط قاعدة البيانات برمجياً
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// تصدير الأدوات للمزامنة مع الملفات الأخرى
+export { db, ref, set, onValue };
