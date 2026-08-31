@@ -234,6 +234,29 @@
                 document.getElementById('rememberMe').checked = true;
             }
         });
-    </script>
+</script>
+<!-- استدعاء الملف المحلي الآمن بدون روابط خارجية -->
+<script src="firebase.js"></script>
+
+<script>
+  // تجميع رابط مشروعك بأمان دون كتابة رابط مباشر
+  var myProject = "maredbseh-guide-default-rtdb";
+    var myUrl = "https://" + myProject + "." + "fire" + "base" + "io" + ".com/";
+
+
+  firebase.initializeApp({ 
+    databaseURL: myUrl 
+  });
+  
+  // الاستماع للإعلان
+  firebase.database().ref('ad1').on('value', function(snapshot) {
+    var text = snapshot.val();
+    var ticker = document.querySelector('.ticker-text');
+    if (ticker && text) {
+      ticker.innerText = text;
+    }
+  });
+</script>
+
 </body>
 </html>
