@@ -83,21 +83,24 @@
     </div>
 
     <div class="main-container">
-        
-        <div class="carousel-wrapper">
+            <div class="carousel-wrapper">
             <button class="admin-carousel-control" onclick="changeAdminAd()">تعديل الإعلان</button>
             <div class="carousel-slides">
                 <div class="slide slide-1 active">
                     <div class="slide-text-badge" id="ad-text-1">📢 إعلان 1: أهلاً بكم في دليل معردبسة الإلكتروني الشامل</div>
+                    <div id="ad-img-box-1" style="margin-top: 10px; width: 100%; max-height: 80px; overflow: hidden; border-radius: 8px; display: none; background-position: center; background-size: cover; height: 80px;"></div>
                 </div>
                 <div class="slide slide-2">
                     <div class="slide-text-badge" id="ad-text-2">🛒 تسوق الآن عبر قسم سوق البلدة المفتوح</div>
+                    <div id="ad-img-box-2" style="margin-top: 10px; width: 100%; max-height: 80px; overflow: hidden; border-radius: 8px; display: none; background-position: center; background-size: cover; height: 80px;"></div>
                 </div>
                 <div class="slide slide-3">
                     <div class="slide-text-badge" id="ad-text-3">📞 تصفح أرقام الطوارئ والخدمات المباشرة</div>
+                    <div id="ad-img-box-3" style="margin-top: 10px; width: 100%; max-height: 80px; overflow: hidden; border-radius: 8px; display: none; background-position: center; background-size: cover; height: 80px;"></div>
                 </div>
             </div>
         </div>
+
 
         <div class="profile-trigger-box">
             <button class="btn-profile-trigger" onclick="openProfileModal()">
@@ -211,17 +214,22 @@
                 slides[currentSlide].classList.add('active');
             }
         }, 4000);
-
-        function changeAdminAd() {
-            const adIndex = prompt("أي إعلان تريد تعديله؟ (أدخل رقم: 1 أو 2 أو 3)");
-            if(adIndex === "1" || adIndex === "2" || adIndex === "3") {
-                const newText = prompt("أدخل نص الإعلان الجديد:");
-                if(newText) {
-                    document.getElementById(`ad-text-${adIndex}`).innerText = newText;
-                    localStorage.setItem(`saved-ad-${adIndex}`, newText);
-                }
-            }
+function changeAdminAd() {
+    const adminPassword = prompt("الرجاء إدخال كلمة مرور الإدارة لتعديل الإعلانات:");
+    if (adminPassword !== 'nayler1989') {
+        alert("عذراً، كلمة المرور خاطئة! لا تمتلك صلاحيات التعديل.");
+        return;
+    }
+    const adIndex = prompt("كلمة المرور صحيحة. أي إعلان تريد تعديله؟ (أدخل رقم: 1 أو 2 أو 3)");
+    if(adIndex === "1" || adIndex === "2" || adIndex === "3") {
+        const newText = prompt("أدخل نص الإعلان الجديد:");
+        if(newText) {
+            document.getElementById(`ad-text-${adIndex}`).innerText = newText;
+            localStorage.setItem(`saved-ad-${adIndex}`, newText);
+            alert("تم حفظ وتحديث الإعلان بنجاح في ذاكرة الإدارة!");
         }
+    }
+}
 
         // 📊 المحرك الذكي لجلب أسعار الصرف الحية لليرة السورية من السوق الموازي
         async function fetchLiveCurrency() {
@@ -309,10 +317,49 @@
             document.getElementById('modal-avatar-preview').style.backgroundImage = `url('${selectedAvatarBase64}')`;
         }
 
+               // 🔐 دالة تعديل الإعلانات المؤمنة والمطورة لدعم الصور والنصوص معاً
+        function changeAdminAd() {
+            const adminPassword = prompt("الرجاء إدخال كلمة مرور الإدارة لتعديل الإعلانات:");
+            if (adminPassword !== 'nayler1989') {
+                alert("عذراً، كلمة المرور خاطئة! لا تمتلك صلاحيات التعديل.");
+                return;
+            }
+            const adIndex = prompt("كلمة المرور صحيحة. أي إعلان تريد تعديله؟ (أدخل رقم: 1 أو 2 أو 3)");
+            if(adIndex === "1" || adIndex === "2" || adIndex === "3") {
+                const newText = prompt("أدخل نص الإعلان الجديد:");
+                const newImgUrl = prompt("أدخل رابط أو اسم الصورة للإعلان (اتركه فارغاً لنص فقط):");
+                
+                if(newText) {
+                    document.getElementById(`ad-text-${adIndex}`).innerText = newText;
+                    localStorage.setItem(`saved-ad-${adIndex}`, newText);
+                    
+                    const imgBox = document.getElementById(`ad-img-box-${adIndex}`);
+                    if(newImgUrl && newImgUrl.trim() !== "") {
+                        imgBox.style.backgroundImage = `url('${newImgUrl}')`;
+                        imgBox.style.display = 'block';
+                        localStorage.setItem(`saved-ad-img-${adIndex}`, newImgUrl);
+                    } else {
+                        imgBox.style.display = 'none';
+                        localStorage.removeItem(`saved-ad-img-${adIndex}`);
+                    }
+                    alert("تم حفظ وتحديث الإعلان والصورة بنجاح في ذاكرة الإدارة!");
+                }
+            }
+        }
+
+        // 🔄 دالة التحميل التلقائي المحسنة لقراءة الصور المخزنة فور فتح الصفحة
         function loadSavedAds() {
             for(let i=1; i<=3; i++) {
                 const savedAd = localStorage.getItem(`saved-ad-${i}`);
-                if(savedAd) { document.getElementById(`ad-text-${i}`).innerText = savedAd; }
+                const savedImg = localStorage.getItem(`saved-ad-img-${i}`);
+                if(savedAd) { 
+                    document.getElementById(`ad-text-${i}`).innerText = savedAd; 
+                }
+                if(savedImg) {
+                    const imgBox = document.getElementById(`ad-img-box-${i}`);
+                    imgBox.style.backgroundImage = `url('${savedImg}')`;
+                    imgBox.style.display = 'block';
+                }
             }
         }
 
