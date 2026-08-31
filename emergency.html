@@ -3,74 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أرقام الطوارئ والخدمات السريعة</title>
+    <title>أرقام الطوارئ السريعة - دليل معردبسة</title>
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com" rel="stylesheet">
     <style>
-        @import url('https://googleapis.com');
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; }
-        body { background-color: #f8f9fa; color: #333; padding-bottom: 40px; }
+        body { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: #ffffff; display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 140px; }
         
-        .emergency-header { background: linear-gradient(135deg, #dc3545, #bd2130); color: white; padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
-        .back-btn { background: rgba(255, 255, 255, 0.2); color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; }
+        /* الهيدر العلوي المطور مع زر الرئيسية */
+        .emergency-header { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 800px; margin: 20px auto 10px auto; padding: 0 15px; }
+        .header-title { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .btn-back-home { background: #004494; color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: background 0.2s; }
+        .btn-back-home:hover { background: #003370; }
+
+        /* حاوية العناوين وبطاقات الطوارئ */
+        .main-container { width: 100%; max-width: 800px; display: flex; flex-direction: column; gap: 15px; margin: 0 auto; padding: 0 15px 40px 15px; }
+        .section-badge { text-align: center; color: #ffd700; font-size: 15px; font-weight: 700; margin-bottom: 5px; }
         
-        .container { width: 100%; max-width: 580px; margin: 20px auto; padding: 0 15px; display: flex; flex-direction: column; gap: 15px; }
-        .section-title { font-size: 16px; color: #666; font-weight: bold; margin-top: 5px; border-right: 4px solid #dc3545; padding-right: 8px; }
+        /* بطاقات الاتصال الميكانيكية المريحة للعين */
+        .emergency-card { background: #ffffff; color: #333333; border-radius: 16px; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; gap: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); border: 2px solid rgba(255, 255, 255, 0.1); transition: transform 0.2s; }
+        .emergency-card:hover { transform: translateY(-2px); }
         
-        .emergency-grid { display: flex; flex-direction: column; gap: 12px; }
+        /* تفاصيل الجانب الأيمن (النصوص) */
+        .card-details { display: flex; flex-direction: column; gap: 4px; text-align: right; flex: 1; }
+        .card-name { font-size: 16px; font-weight: 700; color: #1e3c72; display: flex; align-items: center; gap: 6px; }
+        .card-desc { font-size: 12px; color: #666666; font-weight: 500; }
         
-        .emergency-card { background: white; border-radius: 12px; padding: 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 3px 6px rgba(0,0,0,0.03); border: 1px solid #e4e6eb; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
-        .emergency-card:hover { transform: translateY(-2px); box-shadow: 0 5px 12px rgba(0,0,0,0.08); background-color: #fffdfd; }
+        /* الجانب الأيسر زر اتصال أخضر تفاعلي محمول */
+        .btn-call-now { background: #28a745; color: #ffffff; border: none; padding: 10px 20px; border-radius: 25px; font-size: 14px; font-weight: 700; cursor: pointer; text-decoration: none; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3); transition: background 0.2s; }
+        .btn-call-now:hover { background: #218838; }
         
-        .card-info { display: flex; align-items: center; gap: 15px; }
-        .card-icon { font-size: 32px; background: #fff5f5; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid #ffe3e3; }
-        
-        .service-name { font-size: 18px; font-weight: 700; color: #1c1e21; margin-bottom: 2px; }
-        .service-desc { font-size: 13px; color: #65676b; }
-        
-        .phone-badge { background: #dc3545; color: white; font-size: 16px; font-weight: bold; padding: 8px 16px; border-radius: 20px; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 5px rgba(220,53,69,0.2); }
-        
-        .icon-police { background: #e8f0fe; border-color: #d2e3fc; }
+        /* شريط التنقل السفلي الموحد لسهولة التنقل */
+        .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 500px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 12px 20px; border-radius: 30px; display: flex; justify-content: space-around; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100; border: 1px solid rgba(255, 255, 255, 0.2); }
+        .nav-link { display: flex; flex-direction: column; align-items: center; color: #1e3c72; text-decoration: none; font-size: 11px; font-weight: 700; gap: 4px; }
     </style>
 </head>
 <body>
 
-    <!-- شريط علوي -->
+    <!-- الهيدر العلوي المتناسق تماماً مع صورتك -->
     <div class="emergency-header">
-        <a href="home.html" class="back-btn">⬅ عودة للرئيسية</a>
-        <h1>🚨 أرقام الطوارئ والخدمات</h1>
-        <div style="width: 90px;"></div>
+        <a href="home.html" class="btn-back-home">➡️ الرئيسية</a>
+        <div class="header-title">🚨 أرقام الطوارئ السريعة</div>
     </div>
 
-    <div class="container">
-        
-        <h2 class="section-title">أرقام الطوارئ المعتمدة</h2>
-        <div class="emergency-grid">
-            
-            <!-- بطاقة الدفاع المدني -->
-            <a href="tel:109" class="emergency-card">
-                <div class="card-info">
-                    <div class="card-icon">🚒</div>
-                    <div>
-                        <div class="service-name">الدفاع المدني (الإطفاء)</div>
-                        <div class="service-desc">لحرائق الطوارئ والإنقاذ العاجل</div>
-                    </div>
-                </div>
-                <div class="phone-badge">📞 109</div>
-            </a>
-
-            <!-- بطاقة مخفر الشرطة -->
-            <a href="tel:112" class="emergency-card">
-                <div class="card-info">
-                    <div class="card-icon icon-police">👮</div>
-                    <div>
-                        <div class="service-name">مخفر الشرطة والأمن</div>
-                        <div class="service-desc">للبلاغات والشكاوى الأمنية وحفظ النظام</div>
-                    </div>
-                </div>
-                <div class="phone-badge" style="background-color: #1a73e8; box-shadow: 0 2px 5px rgba(26,115,232,0.2);">📞 112</div>
-            </a>
-
+    <div class="main-container">
+        <div class="section-badge">بطاقات الاتصال الفوري لخدمة أهالي معردبسة وما حولها</div>
+        <!-- بطاقة 1: الدفاع المدني (الخوذ البيضاء) المحدثة برقم إدلب وسراقب وريفها الشامل -->
+        <div class="emergency-card">
+            <a href="tel:0969909063" class="btn-call-now">📞 اتصل الآن</a>
+            <div class="card-details">
+                <div class="card-name">🚒 الدفاع المدني (الخوذ البيضاء)</div>
+                <div class="card-desc">لإطفاء الحرائق، عمليات الإنقاذ والإسعاف الطارئ في سراقب ومعردبسة وريفها.</div>
+            </div>
         </div>
 
+        <!-- بطاقة 2: مخفر الشرطة والأمن -->
+        <div class="emergency-card">
+            <a href="tel:0533111111" class="btn-call-now">📞 اتصل الآن</a>
+            <div class="card-details">
+                <div class="card-name">🚓 مخفر الشرطة والأمن</div>
+                <div class="card-desc">للإبلاغ عن الشكاوى الأمنية، الحوادث وحفظ الأمان.</div>
+            </div>
+        </div>
+
+        <!-- بطاقة 3: منظومة الإسعاف الطبي -->
+        <div class="emergency-card">
+            <a href="tel:0533222222" class="btn-call-now">📞 اتصل الآن</a>
+            <div class="card-details">
+                <div class="card-name">🚑 منظومة الإسعاف الطبي</div>
+                <div class="card-desc">للحالات الطبية الحرجة، النقل العاجل للمشافي الميدانية.</div>
+            </div>
+        </div>
+
+        <!-- بطاقة 4: طوارئ الخدمات والمياه -->
+        <div class="emergency-card">
+            <a href="tel:0533333333" class="btn-call-now">📞 اتصل الآن</a>
+            <div class="card-details">
+                <div class="card-name">⚡ طوارئ الخدمات والمياه</div>
+                <div class="card-desc">للإبلاغ عن أعطال شبكات الكهرباء، المياه والخدمات العامة.</div>
+            </div>
+        </div>
+
+    </div> <!-- إغلاق الحاوية الكبرى main-container بنجاح -->
+
+    <!-- 📌 شريط التنقل السفلي المثبت والمطابق تماماً للواجهة الرئيسية -->
+    <div class="bottom-nav">
+        <a href="home.html" class="nav-link"><span>🏠</span><span>الرئيسية</span></a>
+        <a href="market.html" class="nav-link"><span>🛒</span><span>السوق</span></a>
+        <a href="offers.html" class="nav-link"><span>🔥</span><span>العروض</span></a>
+        <a href="contact.html" class="nav-link"><span>📩</span><span>الشكاوى</span></a>
     </div>
 
 </body>
