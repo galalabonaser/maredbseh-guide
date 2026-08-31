@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>دليل خدمات معردبسة</title>
+    
+    <!-- ربط أيقونة التطبيق الاحترافية لضمان ظهورها عند التثبيت على شاشة الجوال -->
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
+    
     <link rel="preconnect" href="https://googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://googleapis.com" rel="stylesheet">
@@ -107,7 +112,7 @@
         </div>
         <div class="workspace-layout">
             
-            <!-- 1. كرت مواقيت الصلاة -->
+            <!-- 1. كرت مواقيت الصلاة (يظهر بالأعلى فيزيائياً) -->
             <div class="panel-card prayer-card">
                 <div class="panel-title">🕌 مواقيت الصلاة - إدلب وريفها</div>
                 <div class="prayer-list-box">
@@ -119,7 +124,7 @@
                 </div>
             </div>
 
-            <!-- 2. شبكة الأقسام الستة -->
+            <!-- 2. شبكة الأقسام الستة المتوازنة في المنتصف -->
             <div class="menu-grid">
                 <a href="market.html" class="menu-item item-market">
                     <span class="icon">🛒</span>
@@ -147,7 +152,7 @@
                 </a>
             </div>
 
-            <!-- 3. كرت البورصة والأسعار -->
+            <!-- 3. كرت البورصة والأسعار يستقر في الأسفل -->
             <div class="panel-card exchange-card">
                 <div class="panel-title">💲 أسعار السوق الموازي (سوري)</div>
                 <table class="currency-table">
@@ -197,6 +202,7 @@
         </div>
     </div>
 
+    <!-- شريط التنقل السفلي للهواتف -->
     <div class="bottom-nav">
         <a href="index.html" class="nav-link">🏠<span>الرئيسية</span></a>
         <a href="market.html" class="nav-link">🛒<span>السوق</span></a>
@@ -204,10 +210,11 @@
         <a href="contact.html" class="nav-link">📩<span>الشكاوى</span></a>
     </div>
 
+    <!-- كود الجافا سكريبت المطور لضمان التقاط لمس شاشات الجوال ونقر اللاب توب ونظام الزائر -->
     <script>
-        // 1. برمجة زر الإدارة والتحقق من كلمة السر
         function openAdminPrompt(e) {
             if(e) { e.preventDefault(); e.stopPropagation(); }
+            
             const password = prompt('الرجاء إدخال كلمة المرور السرية للإدارة:');
             if (password === 'nayler1989') {
                 const newText = prompt('أدخل نص الإعلان الجديد الذي تريد ظهوره في السلايدر:');
@@ -229,9 +236,9 @@
             mainBtn.addEventListener('touchstart', openAdminPrompt, {passive: false});
         }
 
-        // 2. برمجة السلايدر التلقائي
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
+        
         setInterval(() => {
             if(slides.length > 0) {
                 slides[currentSlide].classList.remove('active');
@@ -240,7 +247,7 @@
             }
         }, 4000);
 
-        // 3. 🛠️ برمجة حساب الزائر بالكامل (فتح، تعديل، حفظ في الـ LocalStorage ليبقى مستقراً)
+        // برمجة حساب الزائر بالكامل (فتح، تعديل، حفظ في الـ LocalStorage)
         const profileModal = document.getElementById('profileModal');
         const profileTriggerBtn = document.getElementById('profileTriggerBtn');
         const closeProfileBtn = document.getElementById('closeProfileBtn');
@@ -251,7 +258,6 @@
         const userCurrentAvatar = document.getElementById('userCurrentAvatar');
         const userProfileNameText = document.getElementById('userProfileNameText');
 
-        // تحميل البيانات المحفوظة مسبقاً للزائر عند فتح الصفحة
         window.addEventListener('DOMContentLoaded', () => {
             const savedName = localStorage.getItem('visitorName');
             const savedAvatar = localStorage.getItem('visitorAvatar');
@@ -265,17 +271,14 @@
             }
         });
 
-        // فتح النافذة عند الضغط على حساب الزائر
         profileTriggerBtn.addEventListener('click', () => {
             profileModal.style.display = 'flex';
         });
 
-        // إغلاق النافذة
         closeProfileBtn.addEventListener('click', () => {
             profileModal.style.display = 'none';
         });
 
-        // معاينة الصورة المختارة داخل النافذة فوراً
         avatarInput.addEventListener('change', function() {
             const file = this.files[0];
             if (file) {
@@ -287,7 +290,6 @@
             }
         });
 
-        // حفظ البيانات في ذاكرة المتصفح وتحديث شكل الأيقونة الخارجي
         saveProfileBtn.addEventListener('click', () => {
             const newName = usernameInput.value.trim();
             if (newName) {
@@ -306,5 +308,6 @@
             alert('تم حفظ بيانات حساب الزائر بنجاح! 👤✨');
         });
     </script>
+
 </body>
 </html>
