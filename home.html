@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>دليل خدمات معردبسة</title>
     
-    <!-- ربط أيقونة التطبيق الاحترافية لضمان ظهورها عند التثبيت على شاشة الجوال -->
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
     
@@ -23,7 +22,7 @@
         
         .carousel-wrapper { position: relative; width: 100%; max-width: 600px; margin: 0 auto; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.15); height: 160px; }
         .carousel-slides { width: 100%; height: 100%; position: relative; }
-        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.6s ease-in-out; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 15px; text-align: center; }
+        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.6s ease-in-out; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 15px; text-align: center; background-position: center; background-size: cover; }
         .slide.active { opacity: 1; z-index: 2; }
         .slide-1 { background: linear-gradient(45deg, #111e38, #2c3e50); }
         .slide-2 { background: linear-gradient(45deg, #16a085, #2c3e50); }
@@ -36,7 +35,6 @@
         .btn-profile-trigger { background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: #fff; padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(5px); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .user-current-avatar { width: 20px; height: 20px; border-radius: 50%; border: 1px solid #fff; background-color: #ffd700; background-position: center; background-size: cover; display: inline-block; }
         
-        /* التنسيقات الخاصة بنافذة حساب الزائر المظهرية */
         .profile-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
         .profile-card { background: #ffffff; color: #333333; border-radius: 16px; padding: 25px; width: 100%; max-width: 380px; text-align: center; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
         .profile-input { width: 100%; padding: 10px 12px; border: 1px solid #ccd0d5; border-radius: 8px; font-size: 14px; text-align: center; outline: none; }
@@ -84,7 +82,7 @@
 <body>
 
     <div class="ticker-container">
-        <div class="ticker-text">أهلاً بكم في دليل خدمات معردبسة والقرى المحيطة بها .. نورتونا بزيارتكم الكريمة والجميلة دائماً ..</div>
+        <div class="ticker-text" id="mainTickerText">أهلاً بكم في دليل خدمات معردبسة والقرى المحيطة بها .. نورتونا بزيارتكم الكريمة والجميلة دائماً ..</div>
     </div>
 
     <div class="main-container">
@@ -92,14 +90,14 @@
         <div class="carousel-wrapper">
             <button class="admin-carousel-control" id="adminBtn">تعديل الإعلان</button>
             <div class="carousel-slides">
-                <div class="slide slide-1 active">
-                    <div class="slide-text-badge">أهلاً بكم في دليل معردبسة الشامل</div>
+                <div class="slide slide-1 active" id="slideContainer1">
+                    <div class="slide-text-badge" id="badge1">أهلاً بكم في دليل معردبسة الشامل</div>
                 </div>
-                <div class="slide slide-2">
-                    <div class="slide-text-badge">تابع أسعار الصرف ومواقيت الصلاة أولاً بأول</div>
+                <div class="slide slide-2" id="slideContainer2">
+                    <div class="slide-text-badge" id="badge2">تابع أسعار الصرف ومواقيت الصلاة أولاً بأول</div>
                 </div>
-                <div class="slide slide-3">
-                    <div class="slide-text-badge">سوق معردبسة المفتوح - بيع وشراء بكل سهولة</div>
+                <div class="slide slide-3" id="slideContainer3">
+                    <div class="slide-text-badge" id="badge3">سوق معردبسة المفتوح - بيع وشراء بكل سهولة</div>
                 </div>
             </div>
         </div>
@@ -112,7 +110,7 @@
         </div>
         <div class="workspace-layout">
             
-            <!-- 1. كرت مواقيت الصلاة (يظهر بالأعلى فيزيائياً) -->
+            <!-- كرت مواقيت الصلاة (الأعلى دائماً فيزيائياً) -->
             <div class="panel-card prayer-card">
                 <div class="panel-title">🕌 مواقيت الصلاة - إدلب وريفها</div>
                 <div class="prayer-list-box">
@@ -124,7 +122,7 @@
                 </div>
             </div>
 
-            <!-- 2. شبكة الأقسام الستة المتوازنة في المنتصف -->
+            <!-- شبكة الأقسام الستة المحدثة في المنتصف -->
             <div class="menu-grid">
                 <a href="market.html" class="menu-item item-market">
                     <span class="icon">🛒</span>
@@ -152,7 +150,7 @@
                 </a>
             </div>
 
-            <!-- 3. كرت البورصة والأسعار يستقر في الأسفل -->
+            <!-- كرت البورصة والأسعار (يستقر في الأسفل) -->
             <div class="panel-card exchange-card">
                 <div class="panel-title">💲 أسعار السوق الموازي (سوري)</div>
                 <table class="currency-table">
@@ -182,19 +180,16 @@
 
     </div>
 
-    <!-- 🛠️ بنية نافذة حساب الزائر التفاعلية المنبثقة -->
+    <!-- نافذة حساب الزائر المنبثقة للتعديل -->
     <div class="profile-modal" id="profileModal">
         <div class="profile-card">
             <h3 style="color: #1e3c72;">إعدادات حساب الزائر</h3>
             <p style="font-size: 12px; color: #65676b;">اختر صورتك الشخصية واسمك المعروض في الدليل</p>
-            
             <div class="avatar-picker-box" onclick="document.getElementById('avatar-input').click()">
                 <div class="preview-avatar-img" id="modalAvatarPreview"></div>
                 <input type="file" id="avatar-input" accept="image/*">
             </div>
-            
             <input type="text" id="username-input" class="profile-input" placeholder="اكتب اسمك هنا...">
-            
             <div class="profile-card-buttons">
                 <button class="btn-profile-save" id="saveProfileBtn">حفظ البيانات</button>
                 <button class="btn-profile-close" id="closeProfileBtn">إلغاء</button>
@@ -202,29 +197,63 @@
         </div>
     </div>
 
-    <!-- شريط التنقل السفلي للهواتف -->
+    <!-- شريط القائمة العائمة للهواتف -->
     <div class="bottom-nav">
         <a href="index.html" class="nav-link">🏠<span>الرئيسية</span></a>
         <a href="market.html" class="nav-link">🛒<span>السوق</span></a>
         <a href="offers.html" class="nav-link">🔥<span>العروض</span></a>
         <a href="contact.html" class="nav-link">📩<span>الشكاوى</span></a>
     </div>
-
-    <!-- كود الجافا سكريبت المطور لضمان التقاط لمس شاشات الجوال ونقر اللاب توب ونظام الزائر -->
     <script>
+        // لوحة تحكم الإدارة المحدثة والشاملة لحفظ الإعلانات والشريط في ذاكرة المتصفح للابد
         function openAdminPrompt(e) {
             if(e) { e.preventDefault(); e.stopPropagation(); }
             
             const password = prompt('الرجاء إدخال كلمة المرور السرية للإدارة:');
             if (password === 'nayler1989') {
-                const newText = prompt('أدخل نص الإعلان الجديد الذي تريد ظهوره في السلايدر:');
-                if (newText) {
-                    const activeSlideBadge = document.querySelector('.slide.active .slide-text-badge');
-                    if (activeSlideBadge) {
-                        activeSlideBadge.textContent = newText;
-                        alert('تم تحديث نص الإعلان بنجاح! 🎉');
+                
+                const choice = prompt('ماذا تريد أن تعدل؟\nاكتب (1) للإعلان الأول\nاكتب (2) للإعلان الثاني\nاكتب (3) للإعلان الثالث\nاكتب (4) لتعديل الشريط المتحرك العلوي');
+                
+                if (choice === '1' || choice === '2' || choice === '3') {
+                    const newText = prompt(`أدخل نص الإعلان الجديد للشريحة رقم (${choice}):`);
+                    if (newText) {
+                        document.getElementById(`badge${choice}`).textContent = newText;
+                        localStorage.setItem(`savedBadge${choice}`, newText); 
                     }
+                    
+                    const imgChoice = prompt('هل تريد إدراج صورة محلية لهذه الشريحة؟\nاكتب اسم الملف مع صيغته (مثال: ad1.jpg) أو اتركه فارغاً للوضع الافتراضي:');
+                    const slideContainer = document.getElementById(`slideContainer${choice}`);
+                    if (slideContainer) {
+                        if (imgChoice) {
+                            slideContainer.style.backgroundImage = `url('${imgChoice}')`;
+                            localStorage.setItem(`savedImg${choice}`, imgChoice); 
+                        } else if (imgChoice === '') {
+                            slideContainer.style.backgroundImage = 'none';
+                            localStorage.removeItem(`savedImg${choice}`);
+                        }
+                    }
+                    alert(`تم تحديث وحفظ الإعلان رقم ${choice} بشكل دائم! 🎉`);
+                    
+                } else if (choice === '4') {
+                    const newTickerText = prompt('أدخل نص الشريط المتحرك العلوي الجديد:');
+                    if (newTickerText) {
+                        const tickerElement = document.getElementById('mainTickerText');
+                        if (tickerElement) {
+                            tickerElement.textContent = newTickerText;
+                            localStorage.setItem('savedTickerText', newTickerText); 
+                            
+                            // إنعاش الحركة الفورية
+                            tickerElement.style.animation = 'none';
+                            tickerElement.offsetHeight;
+                            tickerElement.style.animation = 'marquee 25s linear infinite';
+                            
+                            alert('تم حفظ وتحديث شريط العبارات بنجاح وثبات كامل! 📜🔥');
+                        }
+                    }
+                } else if (choice !== null) {
+                    alert('إدخال غير صحيح! الرجاء اختيار رقم من 1 إلى 4.');
                 }
+                
             } else if (password !== null) {
                 alert('كلمة المرور خاطئة! عذراً لا تملك صلاحية التعديل. ❌');
             }
@@ -236,9 +265,37 @@
             mainBtn.addEventListener('touchstart', openAdminPrompt, {passive: false});
         }
 
+        // كود استدعاء وقراءة النصوص والأسعار المخزنة للأبد فور تحميل الموقع
+        window.addEventListener('DOMContentLoaded', () => {
+            for (let i = 1; i <= 3; i++) {
+                const localBadge = localStorage.getItem(`savedBadge${i}`);
+                const localImg = localStorage.getItem(`savedImg${i}`);
+                if (localBadge) document.getElementById(`badge${i}`).textContent = localBadge;
+                if (localImg) document.getElementById(`slideContainer${i}`).style.backgroundImage = `url('${localImg}')`;
+            }
+            
+            const localTicker = localStorage.getItem('savedTickerText');
+            if (localTicker) document.getElementById('mainTickerText').textContent = localTicker;
+
+            const savedName = localStorage.getItem('visitorName');
+            const savedAvatar = localStorage.getItem('visitorAvatar');
+            if (savedName) {
+                const userProfileNameText = document.getElementById('userProfileNameText');
+                const usernameInput = document.getElementById('username-input');
+                if(userProfileNameText) userProfileNameText.textContent = savedName;
+                if(usernameInput) usernameInput.value = savedName;
+            }
+            if (savedAvatar) {
+                const userCurrentAvatar = document.getElementById('userCurrentAvatar');
+                const modalAvatarPreview = document.getElementById('modalAvatarPreview');
+                if(userCurrentAvatar) userCurrentAvatar.style.backgroundImage = `url(${savedAvatar})`;
+                if(modalAvatarPreview) modalAvatarPreview.style.backgroundImage = `url(${savedAvatar})`;
+            }
+        });
+
+        // حركة السلايدر التلقائية المريحة كل 4 ثوانٍ
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
-        
         setInterval(() => {
             if(slides.length > 0) {
                 slides[currentSlide].classList.remove('active');
@@ -247,7 +304,7 @@
             }
         }, 4000);
 
-        // برمجة حساب الزائر بالكامل (فتح، تعديل، حفظ في الـ LocalStorage)
+        // إعدادات تفعيل نافذة حساب الزائر المحفوظ
         const profileModal = document.getElementById('profileModal');
         const profileTriggerBtn = document.getElementById('profileTriggerBtn');
         const closeProfileBtn = document.getElementById('closeProfileBtn');
@@ -258,56 +315,34 @@
         const userCurrentAvatar = document.getElementById('userCurrentAvatar');
         const userProfileNameText = document.getElementById('userProfileNameText');
 
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedName = localStorage.getItem('visitorName');
-            const savedAvatar = localStorage.getItem('visitorAvatar');
-            if (savedName) {
-                userProfileNameText.textContent = savedName;
-                usernameInput.value = savedName;
-            }
-            if (savedAvatar) {
-                userCurrentAvatar.style.backgroundImage = `url(${savedAvatar})`;
-                modalAvatarPreview.style.backgroundImage = `url(${savedAvatar})`;
-            }
-        });
+        if(profileTriggerBtn) profileTriggerBtn.addEventListener('click', () => { profileModal.style.display = 'flex'; });
+        if(closeProfileBtn) closeProfileBtn.addEventListener('click', () => { profileModal.style.display = 'none'; });
 
-        profileTriggerBtn.addEventListener('click', () => {
-            profileModal.style.display = 'flex';
-        });
-
-        closeProfileBtn.addEventListener('click', () => {
-            profileModal.style.display = 'none';
-        });
-
-        avatarInput.addEventListener('change', function() {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    modalAvatarPreview.style.backgroundImage = `url(${e.target.result})`;
+        if(avatarInput) {
+            avatarInput.addEventListener('change', function() {
+                const file = this.files;
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) { modalAvatarPreview.style.backgroundImage = `url(${e.target.result})`; }
+                    reader.readAsDataURL(file);
                 }
-                reader.readAsDataURL(file);
-            }
-        });
+            });
+        }
 
-        saveProfileBtn.addEventListener('click', () => {
-            const newName = usernameInput.value.trim();
-            if (newName) {
-                localStorage.setItem('visitorName', newName);
-                userProfileNameText.textContent = newName;
-            }
-            
-            const currentBg = modalAvatarPreview.style.backgroundImage;
-            if (currentBg && currentBg !== 'none') {
-                const base64Url = currentBg.slice(5, -2);
-                localStorage.setItem('visitorAvatar', base64Url);
-                userCurrentAvatar.style.backgroundImage = currentBg;
-            }
-            
-            profileModal.style.display = 'none';
-            alert('تم حفظ بيانات حساب الزائر بنجاح! 👤✨');
-        });
+        if(saveProfileBtn) {
+            saveProfileBtn.addEventListener('click', () => {
+                const newName = usernameInput.value.trim();
+                if (newName) { localStorage.setItem('visitorName', newName); if(userProfileNameText) userProfileNameText.textContent = newName; }
+                const currentBg = modalAvatarPreview.style.backgroundImage;
+                if (currentBg && currentBg !== 'none') {
+                    const base64Url = currentBg.slice(5, -2);
+                    localStorage.setItem('visitorAvatar', base64Url);
+                    if(userCurrentAvatar) userCurrentAvatar.style.backgroundImage = currentBg;
+                }
+                profileModal.style.display = 'none';
+                alert('تم حفظ بيانات حساب الزائر بنجاح! 👤✨');
+            });
+        }
     </script>
-
 </body>
 </html>

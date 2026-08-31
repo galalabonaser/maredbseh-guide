@@ -81,7 +81,6 @@
 </head>
 <body>
 
-    <!-- تم تزويد النص بـ ID للتحكم به برمجياً من لوحة الإدارة -->
     <div class="ticker-container">
         <div class="ticker-text" id="mainTickerText">أهلاً بكم في دليل خدمات معردبسة والقرى المحيطة بها .. نورتونا بزيارتكم الكريمة والجميلة دائماً ..</div>
     </div>
@@ -91,7 +90,6 @@
         <div class="carousel-wrapper">
             <button class="admin-carousel-control" id="adminBtn">تعديل الإعلان</button>
             <div class="carousel-slides">
-                <!-- تم منح الـ Badges معرفات فريدة للتحكم بالثلاثة شاشات وبدعم إضافة الصور المحلية -->
                 <div class="slide slide-1 active" id="slideContainer1">
                     <div class="slide-text-badge" id="badge1">أهلاً بكم في دليل معردبسة الشامل</div>
                 </div>
@@ -112,6 +110,7 @@
         </div>
         <div class="workspace-layout">
             
+            <!-- كرت مواقيت الصلاة (الأعلى دائماً فيزيائياً) -->
             <div class="panel-card prayer-card">
                 <div class="panel-title">🕌 مواقيت الصلاة - إدلب وريفها</div>
                 <div class="prayer-list-box">
@@ -123,6 +122,7 @@
                 </div>
             </div>
 
+            <!-- شبكة الأقسام الستة المحدثة في المنتصف -->
             <div class="menu-grid">
                 <a href="market.html" class="menu-item item-market">
                     <span class="icon">🛒</span>
@@ -150,6 +150,7 @@
                 </a>
             </div>
 
+            <!-- كرت البورصة والأسعار (يستقر في الأسفل) -->
             <div class="panel-card exchange-card">
                 <div class="panel-title">💲 أسعار السوق الموازي (سوري)</div>
                 <table class="currency-table">
@@ -179,6 +180,7 @@
 
     </div>
 
+    <!-- نافذة حساب الزائر المنبثقة للتعديل -->
     <div class="profile-modal" id="profileModal">
         <div class="profile-card">
             <h3 style="color: #1e3c72;">إعدادات حساب الزائر</h3>
@@ -195,44 +197,58 @@
         </div>
     </div>
 
+    <!-- شريط القائمة العائمة للهواتف -->
     <div class="bottom-nav">
         <a href="index.html" class="nav-link">🏠<span>الرئيسية</span></a>
         <a href="market.html" class="nav-link">🛒<span>السوق</span></a>
         <a href="offers.html" class="nav-link">🔥<span>العروض</span></a>
         <a href="contact.html" class="nav-link">📩<span>الشكاوى</span></a>
     </div>
-
     <script>
-        // 🛠️ لوحة تحكم الإدارة المحدثة والشاملة لتعديل الـ 3 إعلانات والشريط المتحرك العلوي
+        // لوحة تحكم الإدارة المحدثة والشاملة لحفظ الإعلانات والشريط في ذاكرة المتصفح للابد
         function openAdminPrompt(e) {
             if(e) { e.preventDefault(); e.stopPropagation(); }
             
             const password = prompt('الرجاء إدخال كلمة المرور السرية للإدارة:');
             if (password === 'nayler1989') {
                 
-                // سؤال المطور عن القسم المستهدف بالتعديل
                 const choice = prompt('ماذا تريد أن تعدل؟\nاكتب (1) للإعلان الأول\nاكتب (2) للإعلان الثاني\nاكتب (3) للإعلان الثالث\nاكتب (4) لتعديل الشريط المتحرك العلوي');
                 
                 if (choice === '1' || choice === '2' || choice === '3') {
                     const newText = prompt(`أدخل نص الإعلان الجديد للشريحة رقم (${choice}):`);
                     if (newText) {
                         document.getElementById(`badge${choice}`).textContent = newText;
+                        localStorage.setItem(`savedBadge${choice}`, newText); 
                     }
                     
-                    const imgChoice = prompt('هل تريد إدراج صورة محلية لهذه الشريحة؟\nاكتب اسم الملف مع صيغته (مثال: ad1.jpg) أو اتركه فارغاً للخلفية الافتراضية:');
+                    const imgChoice = prompt('هل تريد إدراج صورة محلية لهذه الشريحة؟\nاكتب اسم الملف مع صيغته (مثال: ad1.jpg) أو اتركه فارغاً للوضع الافتراضي:');
                     const slideContainer = document.getElementById(`slideContainer${choice}`);
-                    if (imgChoice) {
-                        slideContainer.style.backgroundImage = `url('${imgChoice}')`;
-                    } else if (imgChoice === '') {
-                        slideContainer.style.backgroundImage = 'none';
+                    if (slideContainer) {
+                        if (imgChoice) {
+                            slideContainer.style.backgroundImage = `url('${imgChoice}')`;
+                            localStorage.setItem(`savedImg${choice}`, imgChoice); 
+                        } else if (imgChoice === '') {
+                            slideContainer.style.backgroundImage = 'none';
+                            localStorage.removeItem(`savedImg${choice}`);
+                        }
                     }
-                    alert(`تم تحديث الإعلان رقم ${choice} بنجاح! 🎉`);
+                    alert(`تم تحديث وحفظ الإعلان رقم ${choice} بشكل دائم! 🎉`);
                     
                 } else if (choice === '4') {
                     const newTickerText = prompt('أدخل نص الشريط المتحرك العلوي الجديد:');
                     if (newTickerText) {
-                        document.getElementById('mainTickerText').textContent = newTickerText;
-                        alert('تم تحديث الشريط المتحرك العلوي بنجاح! 📜🔥');
+                        const tickerElement = document.getElementById('mainTickerText');
+                        if (tickerElement) {
+                            tickerElement.textContent = newTickerText;
+                            localStorage.setItem('savedTickerText', newTickerText); 
+                            
+                            // إنعاش الحركة الفورية
+                            tickerElement.style.animation = 'none';
+                            tickerElement.offsetHeight;
+                            tickerElement.style.animation = 'marquee 25s linear infinite';
+                            
+                            alert('تم حفظ وتحديث شريط العبارات بنجاح وثبات كامل! 📜🔥');
+                        }
                     }
                 } else if (choice !== null) {
                     alert('إدخال غير صحيح! الرجاء اختيار رقم من 1 إلى 4.');
@@ -249,7 +265,35 @@
             mainBtn.addEventListener('touchstart', openAdminPrompt, {passive: false});
         }
 
-        // السلايدر التلقائي للتنقل
+        // كود استدعاء وقراءة النصوص والأسعار المخزنة للأبد فور تحميل الموقع
+        window.addEventListener('DOMContentLoaded', () => {
+            for (let i = 1; i <= 3; i++) {
+                const localBadge = localStorage.getItem(`savedBadge${i}`);
+                const localImg = localStorage.getItem(`savedImg${i}`);
+                if (localBadge) document.getElementById(`badge${i}`).textContent = localBadge;
+                if (localImg) document.getElementById(`slideContainer${i}`).style.backgroundImage = `url('${localImg}')`;
+            }
+            
+            const localTicker = localStorage.getItem('savedTickerText');
+            if (localTicker) document.getElementById('mainTickerText').textContent = localTicker;
+
+            const savedName = localStorage.getItem('visitorName');
+            const savedAvatar = localStorage.getItem('visitorAvatar');
+            if (savedName) {
+                const userProfileNameText = document.getElementById('userProfileNameText');
+                const usernameInput = document.getElementById('username-input');
+                if(userProfileNameText) userProfileNameText.textContent = savedName;
+                if(usernameInput) usernameInput.value = savedName;
+            }
+            if (savedAvatar) {
+                const userCurrentAvatar = document.getElementById('userCurrentAvatar');
+                const modalAvatarPreview = document.getElementById('modalAvatarPreview');
+                if(userCurrentAvatar) userCurrentAvatar.style.backgroundImage = `url(${savedAvatar})`;
+                if(modalAvatarPreview) modalAvatarPreview.style.backgroundImage = `url(${savedAvatar})`;
+            }
+        });
+
+        // حركة السلايدر التلقائية المريحة كل 4 ثوانٍ
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
         setInterval(() => {
@@ -260,7 +304,7 @@
             }
         }, 4000);
 
-        // حساب الزائر المحفوظ في ذاكرة التخزين
+        // إعدادات تفعيل نافذة حساب الزائر المحفوظ
         const profileModal = document.getElementById('profileModal');
         const profileTriggerBtn = document.getElementById('profileTriggerBtn');
         const closeProfileBtn = document.getElementById('closeProfileBtn');
@@ -271,42 +315,34 @@
         const userCurrentAvatar = document.getElementById('userCurrentAvatar');
         const userProfileNameText = document.getElementById('userProfileNameText');
 
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedName = localStorage.getItem('visitorName');
-            const savedAvatar = localStorage.getItem('visitorAvatar');
-            if (savedName) {
-                userProfileNameText.textContent = savedName;
-                usernameInput.value = savedName;
-            }
-            if (savedAvatar) {
-                userCurrentAvatar.style.backgroundImage = `url(${savedAvatar})`;
-                modalAvatarPreview.style.backgroundImage = `url(${savedAvatar})`;
-            }
-        });
+        if(profileTriggerBtn) profileTriggerBtn.addEventListener('click', () => { profileModal.style.display = 'flex'; });
+        if(closeProfileBtn) closeProfileBtn.addEventListener('click', () => { profileModal.style.display = 'none'; });
 
-        profileTriggerBtn.addEventListener('click', () => { profileModal.style.display = 'flex'; });
-        closeProfileBtn.addEventListener('click', () => { profileModal.style.display = 'none'; });
+        if(avatarInput) {
+            avatarInput.addEventListener('change', function() {
+                const file = this.files;
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) { modalAvatarPreview.style.backgroundImage = `url(${e.target.result})`; }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
 
-        avatarInput.addEventListener('change', function() {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) { modalAvatarPreview.style.backgroundImage = `url(${e.target.result})`; }
-                reader.readAsDataURL(file);
-            }
-        });
-
-        saveProfileBtn.addEventListener('click', () => {
-            const newName = usernameInput.value.trim();
-            if (newName) { localStorage.setItem('visitorName', newName); userProfileNameText.textContent = newName; }
-            const currentBg = modalAvatarPreview.style.backgroundImage;
-            if (currentBg && currentBg !== 'none') {
-                const base64Url = currentBg.slice(5, -2);
-                localStorage.setItem('visitorAvatar', base64Url);
-                userCurrentAvatar.style.backgroundImage = currentBg;
-            }
-            profileModal.style.display = 'none';
-            alert('تم حفظ بيانات حساب الزائر بنجاح! 👤✨');
-        });
+        if(saveProfileBtn) {
+            saveProfileBtn.addEventListener('click', () => {
+                const newName = usernameInput.value.trim();
+                if (newName) { localStorage.setItem('visitorName', newName); if(userProfileNameText) userProfileNameText.textContent = newName; }
+                const currentBg = modalAvatarPreview.style.backgroundImage;
+                if (currentBg && currentBg !== 'none') {
+                    const base64Url = currentBg.slice(5, -2);
+                    localStorage.setItem('visitorAvatar', base64Url);
+                    if(userCurrentAvatar) userCurrentAvatar.style.backgroundImage = currentBg;
+                }
+                profileModal.style.display = 'none';
+                alert('تم حفظ بيانات حساب الزائر بنجاح! 👤✨');
+            });
+        }
     </script>
 </body>
+</html>
