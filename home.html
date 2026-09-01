@@ -205,12 +205,13 @@
         <a href="contact.html" class="nav-link">📩<span>الشكاوى</span></a>
     </div>
     <!-- كود الجافا سكريبت السحابي المدمج كلياً والذاتي الاتصال لحل مشكلة الـ CORS نهائياً -->
-    <script type="module">
-        import { initializeApp } from "https://gstatic.com";
-        import { getDatabase, ref, set, onValue } from "https://gstatic.com";
+    <!-- استدعاء حزم الفايربيز التقليدية المتوافقة مع المتصفحات واستضافة جيت هاب بنظام كامل الصلاحية -->
+    <script src="https://gstatic.com"></script>
+    <script src="https://gstatic.com"></script>
 
-        // مفاتيح سيرفر maredbseh-guide الحقيقية لضمان عمل قاعدة البيانات أونلاين ومحلياً
-        const firebaseConfig = {
+    <script>
+        // إعداد وبيانات مشروعك الحقيقي maredbseh-guide بنظام v8 المستقر
+        var firebaseConfig = {
             apiKey: "AIzaSyAxma_PbEkmwzuMTu4mhT6UfwFVYMJLExo",
             authDomain: "://firebaseapp.com",
             databaseURL: "https://firebaseio.com",
@@ -221,55 +222,57 @@
             measurementId: "G-9Y8XS1J3YV"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+        // تشغيل الفايربيز وقاعدة البيانات برمجياً
+        firebase.initializeApp(firebaseConfig);
+        var db = firebase.database();
 
-        // 1. المزامنة اللحظية الفورية لاستقبال الإعلانات والشريط العلوي
-        onValue(ref(db, "ads"), (snapshot) => {
-            const data = snapshot.val();
+        // 1. الاستماع الحي والمزامنة الفورية لجلب الإعلانات والشريط العلوي عند كل الناس في نفس اللحظة
+        db.ref("ads").on("value", function(snapshot) {
+            var data = snapshot.val();
             if (data) {
                 if (data.badge1) document.getElementById("badge1").textContent = data.badge1;
                 if (data.badge2) document.getElementById("badge2").textContent = data.badge2;
                 if (data.badge3) document.getElementById("badge3").textContent = data.badge3;
                 
-                if (data.img1) document.getElementById("slideContainer1").style.backgroundImage = `url('${data.img1}')`;
-                if (data.img2) document.getElementById("slideContainer2").style.backgroundImage = `url('${data.img2}')`;
-                if (data.img3) document.getElementById("slideContainer3").style.backgroundImage = `url('${data.img3}')`;
+                if (data.img1) document.getElementById("slideContainer1").style.backgroundImage = "url('" + data.img1 + "')";
+                if (data.img2) document.getElementById("slideContainer2").style.backgroundImage = "url('" + data.img2 + "')";
+                if (data.img3) document.getElementById("slideContainer3").style.backgroundImage = "url('" + data.img3 + "')";
 
                 if (data.tickerText) {
-                    const tickerElement = document.getElementById("mainTickerText");
+                    var tickerElement = document.getElementById("mainTickerText");
                     if (tickerElement) {
                         tickerElement.textContent = data.tickerText;
                         tickerElement.style.animation = 'none';
-                        tickerElement.offsetHeight;
+                        tickerElement.offsetHeight; // إجبار المتصفح على قراءة النص فوراً
                         tickerElement.style.animation = 'marquee 25s linear infinite';
                     }
                 }
             }
         });
 
-        // 2. جعل الدالة عالمية ومربوطة بـ window لكسر حظر النوافذ المنبثقة نهائياً
+        // 2. تفعيل دالة الإدارة العالمية المفتوحة بكلمة السر المستقرة للإدارة
         window.openAdminPrompt = function(e) {
             if(e) { e.preventDefault(); e.stopPropagation(); }
             
-            const password = prompt('الرجاء إدخال كلمة المرور السرية للإدارة:');
+            var password = prompt('الرجاء إدخال كلمة المرور السرية للإدارة:');
             if (password === 'nayler1989') {
                 
-                const choice = prompt('ماذا تريد أن تعدل سحابياً؟\nاكتب (1) للإعلان الأول\nاكتب (2) للإعلان الثاني\nاكتب (3) للإعلان الثالث\nاكتب (4) لتعديل الشريط المتحرك العلوي');
+                var choice = prompt('ماذا تريد أن تعدل سحابياً؟\nاكتب (1) للإعلان الأول\nاكتب (2) للإعلان الثاني\nاكتب (3) للإعلان الثالث\nاكتب (4) لتعديل الشريط المتحرك العلوي');
                 
                 if (choice === '1' || choice === '2' || choice === '3') {
-                    const newText = prompt(`أدخل نص الإعلان الجديد للشريحة رقم (${choice}):`);
-                    const imgChoice = prompt('أدخل اسم ملف الصورة المحلية (مثال: ad1.jpg) أو اتركه فارغاً:');
+                    var newText = prompt("أدخل نص الإعلان الجديد للشريحة رقم (" + choice + "):");
+                    var imgChoice = prompt('أدخل اسم ملف الصورة المحلية (مثال: ad1.jpg) أو اتركه فارغاً:');
                     
-                    if (newText !== null && newText !== "") set(ref(db, `ads/badge${choice}`), newText);
-                    if (imgChoice !== null) set(ref(db, `ads/img${choice}`), imgChoice);
+                    // ضخ التعديلات فوراً للسحاب لتعميمها على جميع الشاشات والمستخدمين
+                    if (newText !== null && newText !== "") db.ref("ads/badge" + choice).set(newText);
+                    if (imgChoice !== null) db.ref("ads/img" + choice).set(imgChoice);
                     
-                    alert(`تم رفع وتحديث الإعلان رقم ${choice} سحابياً بنجاح تام! 🎉☁️`);
+                    alert("تم رفع وتحديث الإعلان رقم " + choice + " سحابياً بنجاح تام! 🎉☁️");
                     
                 } else if (choice === '4') {
-                    const newTickerText = prompt('أدخل نص الشريط المتحرك العلوي الجديد:');
+                    var newTickerText = prompt('أدخل نص الشريط المتحرك العلوي الجديد:');
                     if (newTickerText) {
-                        set(ref(db, "ads/tickerText"), newTickerText);
+                        db.ref("ads/tickerText").set(newTickerText);
                         alert('تم رفع العبارة الجديدة للسحاب وتحديثها على هواتف كل الزوار! 📜☁️');
                     }
                 } else if (choice !== null) {
@@ -281,16 +284,17 @@
             }
         }
 
-        const mainBtn = document.getElementById('adminBtn');
+        // ربط أحداث النقر بالدالة المصلحة والآمنة
+        var mainBtn = document.getElementById('adminBtn');
         if (mainBtn) {
             mainBtn.addEventListener('click', window.openAdminPrompt);
             mainBtn.addEventListener('touchstart', window.openAdminPrompt, {passive: false});
         }
 
         // حركة السلايدر التلقائية المريحة كل 4 ثوانٍ
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-        setInterval(() => {
+        var currentSlide = 0;
+        var slides = document.querySelectorAll('.slide');
+        setInterval(function() {
             if(slides.length > 0) {
                 slides[currentSlide].classList.remove('active');
                 currentSlide = (currentSlide + 1) % slides.length;
@@ -298,51 +302,51 @@
             }
         }, 4000);
 
-        // إعدادات تفعيل نافذة حساب الزائر وحفظها محلياً
-        const profileModal = document.getElementById('profileModal');
-        const profileTriggerBtn = document.getElementById('profileTriggerBtn');
-        const closeProfileBtn = document.getElementById('closeProfileBtn');
-        const saveProfileBtn = document.getElementById('saveProfileBtn');
-        const usernameInput = document.getElementById('username-input');
-        const avatarInput = document.getElementById('avatar-input');
-        const modalAvatarPreview = document.getElementById('modalAvatarPreview');
-        const userCurrentAvatar = document.getElementById('userCurrentAvatar');
-        const userProfileNameText = document.getElementById('userProfileNameText');
+        // إعدادات تفعيل نافذة حساب الزائر وحفظها محلياً في المتصفح لخصوصية الزوار
+        var profileModal = document.getElementById('profileModal');
+        var profileTriggerBtn = document.getElementById('profileTriggerBtn');
+        var closeProfileBtn = document.getElementById('closeProfileBtn');
+        var saveProfileBtn = document.getElementById('saveProfileBtn');
+        var usernameInput = document.getElementById('username-input');
+        var avatarInput = document.getElementById('avatar-input');
+        var modalAvatarPreview = document.getElementById('modalAvatarPreview');
+        var userCurrentAvatar = document.getElementById('userCurrentAvatar');
+        var userProfileNameText = document.getElementById('userProfileNameText');
 
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedName = localStorage.getItem('visitorName');
-            const savedAvatar = localStorage.getItem('visitorAvatar');
+        window.addEventListener('DOMContentLoaded', function() {
+            var savedName = localStorage.getItem('visitorName');
+            var savedAvatar = localStorage.getItem('visitorAvatar');
             if (savedName) {
                 if(userProfileNameText) userProfileNameText.textContent = savedName;
                 if(usernameInput) usernameInput.value = savedName;
             }
             if (savedAvatar) {
-                if(userCurrentAvatar) userCurrentAvatar.style.backgroundImage = `url(${savedAvatar})`;
-                if(modalAvatarPreview) modalAvatarPreview.style.backgroundImage = `url(${savedAvatar})`;
+                if(userCurrentAvatar) userCurrentAvatar.style.backgroundImage = "url(" + savedAvatar + ")";
+                if(modalAvatarPreview) modalAvatarPreview.style.backgroundImage = "url(" + savedAvatar + ")";
             }
         });
 
-        if(profileTriggerBtn) profileTriggerBtn.addEventListener('click', () => { profileModal.style.display = 'flex'; });
-        if(closeProfileBtn) closeProfileBtn.addEventListener('click', () => { profileModal.style.display = 'none'; });
+        if(profileTriggerBtn) profileTriggerBtn.addEventListener('click', function() { profileModal.style.display = 'flex'; });
+        if(closeProfileBtn) closeProfileBtn.addEventListener('click', function() { profileModal.style.display = 'none'; });
 
         if(avatarInput) {
             avatarInput.addEventListener('change', function() {
-                const file = this.files;
+                var file = this.files;
                 if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) { modalAvatarPreview.style.backgroundImage = `url(${e.target.result})`; }
+                    var reader = new FileReader();
+                    reader.onload = function(e) { modalAvatarPreview.style.backgroundImage = "url(" + e.target.result + ")"; }
                     reader.readAsDataURL(file);
                 }
             });
         }
 
         if(saveProfileBtn) {
-            saveProfileBtn.addEventListener('click', () => {
-                const newName = usernameInput.value.trim();
+            saveProfileBtn.addEventListener('click', function() {
+                var newName = usernameInput.value.trim();
                 if (newName) { localStorage.setItem('visitorName', newName); if(userProfileNameText) userProfileNameText.textContent = newName; }
-                const currentBg = modalAvatarPreview.style.backgroundImage;
+                var currentBg = modalAvatarPreview.style.backgroundImage;
                 if (currentBg && currentBg !== 'none') {
-                    const base64Url = currentBg.slice(5, -2);
+                    var base64Url = currentBg.slice(5, -2);
                     localStorage.setItem('visitorAvatar', base64Url);
                     if(userCurrentAvatar) userCurrentAvatar.style.backgroundImage = currentBg;
                 }
