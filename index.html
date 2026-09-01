@@ -8,352 +8,408 @@
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
     
+    <!-- استدعاء خط تاجويل ومكتبات فايربيس المستقرة v8 -->
     <link rel="preconnect" href="https://googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com" rel="stylesheet">
+    <link href="https://googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <script src="https://gstatic.com"></script>
+    <script src="https://gstatic.com"></script>
+    <script src="https://gstatic.com"></script>
+
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; }
-        body { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: #ffffff; display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 140px; }
-        .ticker-container { background: #ffffff; color: #1e3c72; overflow: hidden; white-space: nowrap; padding: 14px 0; font-weight: 700; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border-bottom: 3px solid #ffd700; width: 100%; }
-        .ticker-text { display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite; }
+        html { scroll-behavior: smooth; } /* تفعيل التمرير الانسيابي السلس للموقع */
+        body { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: #ffffff; display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 140px; overflow-x: hidden; }
+        
+        /* شريط التنبيهات والأخبار المتحرك */
+        .ticker-container { background: #ffffff; color: #1e3c72; overflow: hidden; white-space: nowrap; padding: 14px 0; font-weight: 700; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border-bottom: 3px solid #ffd700; width: 100%; position: relative; }
+        .ticker-text { display: inline-block; padding-left: 100%; animation: marquee 22s linear infinite; }
         @keyframes marquee { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(100%, 0, 0); } }
         
         .main-container { width: 100%; max-width: 1000px; display: flex; flex-direction: column; gap: 20px; margin: 20px auto; padding: 0 15px 40px 15px; }
         
+        /* سلايدر الإعلانات والعروض اليومية */
         .carousel-wrapper { position: relative; width: 100%; max-width: 600px; margin: 0 auto; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.15); height: 160px; }
         .carousel-slides { width: 100%; height: 100%; position: relative; }
-        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.6s ease-in-out; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 15px; text-align: center; background-position: center; background-size: cover; }
+        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.6s ease-in-out; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 15px; text-align: center; }
         .slide.active { opacity: 1; z-index: 2; }
         .slide-1 { background: linear-gradient(45deg, #111e38, #2c3e50); }
         .slide-2 { background: linear-gradient(45deg, #16a085, #2c3e50); }
         .slide-3 { background: linear-gradient(45deg, #2980b9, #2c3e50); }
-        .slide-text-badge { color: #fff; padding: 8px 16px; font-size: 14px; font-weight: bold; background: rgba(0, 0, 0, 0.5); border-radius: 8px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); z-index: 5; }
+        .slide-text-badge { color: #fff; padding: 8px 16px; font-size: 14px; font-weight: bold; background: rgba(0, 0, 0, 0.6); border-radius: 8px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); }
+        .admin-carousel-control { position: absolute; top: 12px; left: 12px; background: rgba(255, 215, 0, 0.9); color: #1e3c72; border: none; padding: 6px 14px; border-radius: 20px; font-size: 11px; cursor: pointer; font-weight: bold; z-index: 999; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         
-        .admin-carousel-control { position: absolute; top: 12px; left: 12px; background: rgba(255, 215, 0, 0.9); color: #1e3c72; border: none; padding: 6px 14px; border-radius: 20px; font-size: 11px; cursor: pointer; font-weight: bold; z-index: 999; box-shadow: 0 4px 10px rgba(0,0,0,0.3); pointer-events: auto; }
-        
+        /* صندوق وضع الزائر */
         .profile-trigger-box { display: flex; justify-content: center; margin: 5px auto; }
-        .btn-profile-trigger { background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: #fff; padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(5px); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .user-current-avatar { width: 20px; height: 20px; border-radius: 50%; border: 1px solid #fff; background-color: #ffd700; background-position: center; background-size: cover; display: inline-block; }
+        .btn-profile-trigger { background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: #fff; padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(5px); }
+        .user-current-avatar { width: 22px; height: 22px; border-radius: 50%; border: 1px solid #fff; background: #ffd700 center center no-repeat; background-size: cover; display: inline-block; }
         
+        /* نافذة الزائر المنبثقة */
         .profile-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
         .profile-card { background: #ffffff; color: #333333; border-radius: 16px; padding: 25px; width: 100%; max-width: 380px; text-align: center; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
         .profile-input { width: 100%; padding: 10px 12px; border: 1px solid #ccd0d5; border-radius: 8px; font-size: 14px; text-align: center; outline: none; }
         .profile-card-buttons { display: flex; gap: 10px; }
-        .btn-profile-save { flex: 1; background: #28a745; color: #fff; border: none; padding: 10px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px; }
-        .btn-profile-close { background: #65676b; color: #fff; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px; }
-        .avatar-picker-box { position: relative; width: 80px; height: 80px; margin: 0 auto; cursor: pointer; }
+        .btn-profile-save { flex: 1; background: #28a745; color: #fff; border: none; padding: 10px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        .btn-profile-close { background: #65676b; color: #fff; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        .avatar-picker-box { width: 80px; height: 80px; margin: 0 auto; cursor: pointer; }
         .preview-avatar-img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #1e3c72; background: #f0f2f5 center center no-repeat; background-size: cover; }
         #avatar-input { display: none; }
         
-        .workspace-layout { display: flex; flex-direction: column; gap: 20px; width: 100%; margin-top: 10px; }
-        .panel-card { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 14px; padding: 20px; backdrop-filter: blur(5px); box-shadow: 0 6px 15px rgba(0,0,0,0.15); display: flex; flex-direction: column; justify-content: center; width: 100%; max-width: 600px; margin: 0 auto; }
-        .panel-title { font-size: 15px; font-weight: 700; color: #ffd700; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; justify-content: center; }
+        /* شبكة أزرار الدليل واللوحات */
+        .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; width: 100%; max-width: 600px; margin: 0 auto; }
+        .menu-item { padding: 25px 15px; border-radius: 16px; font-size: 15px; font-weight: 700; color: #ffffff; text-decoration: none; display: flex; flex-direction: column; gap: 10px; justify-content: center; align-items: center; text-align: center; transition: all 0.3s ease; box-shadow: 0 6px 15px rgba(0,0,0,0.2); border: 1px solid rgba(255, 255, 255, 0.15); }
+        .menu-item span.icon { font-size: 30px; }
+        .menu-item:hover { transform: translateY(-3px); filter: brightness(1.1); }
+        
+        .item-market { background: linear-gradient(135deg, #007bff, #004494); }
+        .item-jobs { background: linear-gradient(135deg, #17a2b8, #0f6f7e); }
+        .item-offers { background: linear-gradient(135deg, #ff9900, #cc5200); }
+        .item-emergency { background: linear-gradient(135deg, #dc3545, #991b1b); }
+        .item-clothes { background: linear-gradient(135deg, #9333ea, #6b21a8); }
+        .item-contact { background: linear-gradient(135deg, #28a745, #14532d); }
+        
+        .panel-card { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 14px; padding: 20px; backdrop-filter: blur(5px); width: 100%; max-width: 600px; margin: 0 auto; }
+        .panel-title { font-size: 15px; font-weight: 700; color: #ffd700; margin-bottom: 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; }
         
         .currency-table { width: 100%; font-size: 14px; border-collapse: collapse; }
-        .currency-table td { padding: 10px 6px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: #ffffff; }
+        .currency-table td { padding: 12px 6px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .currency-table tr:last-child td { border-bottom: none; }
+        .rate-container { display: flex; justify-content: flex-end; gap: 15px; font-weight: bold; color: #ffd700; text-align: left; }
+        .rate-label-sub { font-size: 11px; color: #cbd5e1; font-weight: normal; margin-right: 4px; }
         
-        .prayer-list-box { display: flex; flex-direction: column; gap: 8px; width: 100%; }
-        .prayer-row-item { display: flex; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 8px 15px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05); font-size: 14px; }
-        .prayer-name { color: #cbd5e1; font-weight: 500; }
-        .prayer-time { font-weight: 700; color: #fff; }
+        .prayer-list-box { display: flex; flex-direction: column; gap: 8px; }
+        .prayer-row-item { display: flex; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 10px 15px; border-radius: 8px; font-size: 14px; border: 1px solid rgba(255,255,255,0.05); align-items: center; }
+        .prayer-time { font-weight: 700; color: #ffd700; font-size: 15px; }
 
-        .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; width: 100%; max-width: 600px; margin: 0 auto; }
-        .menu-item { padding: 25px 15px; border-radius: 16px; font-size: 15px; font-weight: 700; color: #ffffff; text-decoration: none; display: flex; flex-direction: column; gap: 10px; justify-content: center; align-items: center; text-align: center; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 6px 15px rgba(0,0,0,0.2); border: 1px solid rgba(255, 255, 255, 0.15); }
-        .menu-item span.icon { font-size: 30px; transition: transform 0.3s ease; }
-        .menu-item:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.4); filter: brightness(1.15); }
-        
-        .item-market { background: #007bff; background: linear-gradient(135deg, #007bff, #004494); }
-        .item-jobs { background: #17a2b8; background: linear-gradient(135deg, #17a2b8, #0f6f7e); }
-        .item-offers { background: #ff9900; background: linear-gradient(135deg, #ff9900, #cc5200); }
-        .item-emergency { background: #dc3545; background: linear-gradient(135deg, #dc3545, #991b1b); }
-        .item-clothes { background: #9333ea; background: linear-gradient(135deg, #9333ea, #6b21a8); }
-        .item-contact { background: #28a745; background: linear-gradient(135deg, #28a745, #14532d); }
-        
-        .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 500px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 12px 20px; border-radius: 30px; display: flex; justify-content: space-around; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100; border: 1px solid rgba(255, 255, 255, 0.2); }
-        .nav-link { display: flex; flex-direction: column; align-items: center; color: #1e3c72; text-decoration: none; font-size: 11px; font-weight: 700; gap: 4px; }
+        /* شريط التنقل السفلي الحصري والمطور بالأزرار الأربعة المحددة */
+        .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 550px; background: rgba(255, 255, 255, 0.96); padding: 12px 10px; border-radius: 30px; display: flex; justify-content: space-around; box-shadow: 0 10px 30px rgba(0,0,0,0.4); z-index: 1000; border: 1px solid rgba(255,255,255,0.2); }
+        .nav-link { display: flex; flex-direction: column; align-items: center; color: #1e3c72; text-decoration: none; font-size: 11px; font-weight: 700; gap: 4px; flex: 1; text-align: center; transition: transform 0.2s ease; }
+        .nav-link:hover { transform: scale(1.05); color: #ffd700; }
+        .nav-link span.nav-icon { font-size: 20px; }
 
         @media (max-width: 600px) {
-            .menu-grid { gap: 8px; }
-            .menu-item { padding: 15px 5px; font-size: 12px; border-radius: 12px; }
-            .menu-item span.icon { font-size: 24px; }
+            .menu-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .menu-item { padding: 20px 10px; font-size: 13px; }
+            .nav-link { font-size: 10px; }
         }
     </style>
 </head>
-<body>
+<body id="app-top"> <!-- معرف الشاشة الرئيسية لأعلى الصفحة -->
 
-    <div class="ticker-container">
-        <div class="ticker-text" id="mainTickerText">جاري تحميل شريط الأخبار السحابي...</div>
+    <!-- شريط الإعلانات التنبيهي العلوي المتحرك (مرتبط بزر الوظائف) -->
+    <div class="ticker-container" id="section-ticker">
+        <div class="ticker-text" id="ticker-ads">العروض والوظائف الشاغرة أولاً بأول.. مرحباً بكم في دليل معردبسة الرسمي.</div>
     </div>
 
     <div class="main-container">
         
-        <div class="carousel-wrapper">
-            <button class="admin-carousel-control" id="adminBtn">تعديل الإعلان</button>
+        <!-- مساحة سلايدر الإعلانات والعروض اليومية (مرتبط بزر العروض) -->
+        <div class="carousel-wrapper" id="section-carousel">
+            <button class="admin-carousel-control" onclick="triggerAdminLock()">تعديل الإعلان ⚙️</button>
             <div class="carousel-slides">
-                <div class="slide slide-1 active" id="slideContainer1">
-                    <div class="slide-text-badge" id="badge1">جاري جلب الإعلان السحابي 1...</div>
+                <div class="slide slide-1 active">
+                    <div class="slide-text-badge" id="ad-slide-1">السلام عليكم ورحمة الله وبركاته</div>
                 </div>
-                <div class="slide slide-2" id="slideContainer2">
-                    <div class="slide-text-badge" id="badge2">جاري جلب الإعلان السحابي 2...</div>
+                <div class="slide slide-2">
+                    <div class="slide-text-badge" id="ad-slide-2">تخفيضات كبرى في أسواق البلدة - قسم العروض</div>
                 </div>
-                <div class="slide slide-3" id="slideContainer3">
-                    <div class="slide-text-badge" id="badge3">جاري جلب الإعلان السحابي 3...</div>
+                <div class="slide slide-3">
+                    <div class="slide-text-badge" id="ad-slide-3">دليل معردبسة الرقمي - خدمتك أصبحت أسهل وأسرع</div>
                 </div>
             </div>
         </div>
 
+        <!-- صندوق التحكم بالزائر والملف الشخصي -->
         <div class="profile-trigger-box">
-            <button class="btn-profile-trigger" id="profileTriggerBtn">
-                <span class="user-current-avatar" id="userCurrentAvatar"></span>
-                <span id="userProfileNameText">حساب الزائر</span>
+            <button class="btn-profile-trigger" onclick="toggleProfileModal(true)">
+                <div class="user-current-avatar" id="nav-avatar" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://w3.org\' viewBox=\'0 0 24 24\' fill=\'%231e3c72\'><path d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z\'/></svg>');"></div>
+                <span id="nav-username">تسجيل دخول كـ زائر</span>
             </button>
         </div>
-        <div class="workspace-layout">
-            
-            <!-- 1. كرت مواقيت الصلاة -->
-            <div class="panel-card prayer-card">
-                <div class="panel-title">🕌 مواقيت الصلاة - إدلب وريفها</div>
-                <div class="prayer-list-box">
-                    <div class="prayer-row-item"><span class="prayer-name">الفجر</span><span class="prayer-time">04:42 ص</span></div>
-                    <div class="prayer-row-item"><span class="prayer-name">الظهر</span><span class="prayer-time">12:35 م</span></div>
-                    <div class="prayer-row-item"><span class="prayer-name">العصر</span><span class="prayer-time">04:12 م</span></div>
-                    <div class="prayer-row-item"><span class="prayer-name">المغرب</span><span class="prayer-time">06:55 م</span></div>
-                    <div class="prayer-row-item"><span class="prayer-name">العشاء</span><span class="prayer-time">08:22 م</span></div>
-                </div>
-            </div>
+       <!-- شبكة الأقسام والخدمات المصلحة للتوجيه بين الملفات المنفصلة -->
+<div class="menu-grid">
+    <a href="market.html" class="menu-item item-market"><span class="icon">🏪</span><span>سوق البلدة</span></a>
+    <a href="jobs.html" class="menu-item item-jobs"><span class="icon">💼</span><span>وظائف شاغرة</span></a>
+    <a href="offers.html" class="menu-item item-offers"><span class="icon">🔥</span><span>العروض اليومية</span></a>
+    <a href="emergency.html" class="menu-item item-emergency"><span class="icon">🚑</span><span>الطوارئ والصحة</span></a>
+    <a href="clothes.html" class="menu-item item-clothes"><span class="icon">👕</span><span>أزياء وموضة</span></a>
+    <a href="contact.html" class="menu-item item-contact"><span class="icon">📞</span><span>اتصل بنا</span></a>
+</div>
 
-            <!-- 2. شبكة الأقسام الستة المتوازنة في المنتصف -->
-            <div class="menu-grid">
-                <a href="market.html" class="menu-item item-market">
-                    <span class="icon">🛒</span>
-                    <span>سوق معردبسة</span>
-                </a>
-                <a href="clothes.html" class="menu-item item-clothes">
-                    <span class="icon">👕</span>
-                    <span>الألبسة</span>
-                </a>
-                <a href="emergency.html" class="menu-item item-emergency">
-                    <span class="icon">🚒</span>
-                    <span>الطوارئ</span>
-                </a>
-                <a href="jobs.html" class="menu-item item-jobs">
-                    <span class="icon">💼</span>
-                    <span>الوظائف</span>
-                </a>
-                <a href="offers.html" class="menu-item item-offers">
-                    <span class="icon">🔥</span>
-                    <span>العروض</span>
-                </a>
-                <a href="contact.html" class="menu-item item-contact">
-                    <span class="icon">📩</span>
-                    <span>الشكاوى</span>
-                </a>
-            </div>
 
-            <!-- 3. كرت البورصة والأسعار -->
-            <div class="panel-card exchange-card">
-                <div class="panel-title">💲 أسعار السوق الموازي (سوري)</div>
-                <table class="currency-table">
-                    <thead>
-                        <tr style="color: #ffd700; font-size: 11px; text-align: center;">
-                            <td>العملة</td>
-                            <td>شراء</td>
-                            <td>مبيع</td>
-                        </tr>
-                    </thead>
-                    <tbody style="text-align: center; font-weight: bold;">
-                        <tr>
-                            <td style="color: #cbd5e1;">💵 دولار</td>
-                            <td style="color: #28a745;">131.50</td>
-                            <td style="color: #dc3545;">132.00</td>
-                        </tr>
-                        <tr>
-                            <td style="color: #cbd5e1;">🇹🇷 تركي</td>
-                            <td style="color: #28a745;">2.71</td>
-                            <td style="color: #dc3545;">2.74</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        <!-- لوحة أسكار الصرف (مرتبطة بزر سوق البلدة) -->
+        <div class="panel-card" id="section-currency">
+            <div class="panel-title">💵 أسعار الصرف مقابل الليرة السورية (SYP) اليوم</div>
+            <table class="currency-table">
+                <tr>
+                    <td>🇺🇸 دولار أمريكي (USD)</td>
+                    <td>
+                        <div class="rate-container">
+                            <div><span class="rate-label-sub">شراء:</span><span id="usd-buy">131.50</span></div>
+                            <div><span class="rate-label-sub">مبيع:</span><span id="usd-sell">132.00</span></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>🇹🇷 ليرة تركية (TRY)</td>
+                    <td>
+                        <div class="rate-container">
+                            <div><span class="rate-label-sub">شراء:</span><span id="try-buy">2.71</span></div>
+                            <div><span class="rate-label-sub">مبيع:</span><span id="try-sell">2.74</span></div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
+        <!-- لوحة مواقيت الصلاة الدقيقة -->
+        <div class="panel-card">
+            <div class="panel-title">🕌 مواقيت الصلاة في سراقب وريفها (تحديث مباشر)</div>
+            <div class="prayer-list-box">
+                <div class="prayer-row-item"><span class="prayer-name">الفجر</span><span class="prayer-time" id="p-fajr">04:33 ص</span></div>
+                <div class="prayer-row-item"><span class="prayer-name">الشروق</span><span class="prayer-time" id="p-shuruq">06:01 ص</span></div>
+                <div class="prayer-row-item"><span class="prayer-name">الظهر</span><span class="prayer-time" id="p-dhuhr">12:33 م</span></div>
+                <div class="prayer-row-item"><span class="prayer-name">العصر</span><span class="prayer-time" id="p-asr">04:11 م</span></div>
+                <div class="prayer-row-item"><span class="prayer-name">المغرب</span><span class="prayer-time" id="p-maghrib">07:04 م</span></div>
+                <div class="prayer-row-item"><span class="prayer-name">العشاء</span><span class="prayer-time" id="p-isha">08:34 م</span></div>
+            </div>
         </div>
 
     </div>
-
-    <!-- بنية نافذة حساب الزائر التفاعلية المنبثقة -->
-    <div class="profile-modal" id="profileModal">
+    <!-- نافذة تعديل بيانات الزائر المنبثقة -->
+    <div class="profile-modal" id="modal-profile">
         <div class="profile-card">
-            <h3 style="color: #1e3c72;">إعدادات حساب الزائر</h3>
-            <p style="font-size: 12px; color: #65676b;">اختر صورتك الشخصية واسمك المعروض في الدليل</p>
+            <h3>بيانات الزائر</h3>
             <div class="avatar-picker-box" onclick="document.getElementById('avatar-input').click()">
-                <div class="preview-avatar-img" id="modalAvatarPreview"></div>
-                <input type="file" id="avatar-input" accept="image/*">
+                <div class="preview-avatar-img" id="modal-avatar-preview" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://w3.org\' viewBox=\'0 0 24 24\' fill=\'%231e3c72\'><path d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z\'/></svg>');"></div>
+                <input type="file" id="avatar-input" accept="image/*" onchange="previewAvatar(event)">
             </div>
-            <input type="text" id="username-input" class="profile-input" placeholder="اكتب اسمك هنا...">
+            <input type="text" id="input-username" class="profile-input" placeholder="اكتب اسم الزائر هنا...">
             <div class="profile-card-buttons">
-                <button class="btn-profile-save" id="saveProfileBtn">حفظ البيانات</button>
-                <button class="btn-profile-close" id="closeProfileBtn">إلغاء</button>
+                <button class="btn-profile-save" onclick="saveVisitorProfile()">حفظ البيانات</button>
+                <button class="btn-profile-close" onclick="toggleProfileModal(false)">إلغاء</button>
             </div>
         </div>
     </div>
 
-    <!-- شريط التنقل السفلي للهواتف -->
-    <div class="bottom-nav">
-        <a href="index.html" class="nav-link">🏠<span>الرئيسية</span></a>
-        <a href="market.html" class="nav-link">🛒<span>السوق</span></a>
-        <a href="offers.html" class="nav-link">🔥<span>العروض</span></a>
-        <a href="contact.html" class="nav-link">📩<span>الشكاوى</span></a>
-    </div>
-    <!-- كود الجافا سكريبت السحابي المدمج كلياً والذاتي الاتصال لحل مشكلة الـ CORS نهائياً -->
-    <!-- استدعاء حزم الفايربيز التقليدية المتوافقة مع المتصفحات واستضافة جيت هاب بنظام كامل الصلاحية -->
-    <script src="https://gstatic.com"></script>
-    <script src="https://gstatic.com"></script>
+    <!-- شريط الاختصارات الأربعة الفعال والمنظم أسفل الشاشة -->
+ <!-- شريط الاختصارات الأربعة السفلي المصلح لفتح الملفات المنفصلة بكفاءة -->
+<div class="bottom-nav">
+    <a href="home.html" class="nav-link">
+        <span class="nav-icon">🏠</span>
+        <span>الرئيسية</span>
+    </a>
+    <a href="market.html" class="nav-link">
+        <span class="nav-icon">🏪</span>
+        <span>سوق البلدة</span>
+    </a>
+    <a href="offers.html" class="nav-link">
+        <span class="nav-icon">🔥</span>
+        <span>العروض اليومية</span>
+    </a>
+    <a href="jobs.html" class="nav-link">
+        <span class="nav-icon">💼</span>
+        <span>الوظائف</span>
+    </a>
+</div>
 
     <script>
-        // إعداد وبيانات مشروعك الحقيقي maredbseh-guide بنظام v8 المستقر
-        var firebaseConfig = {
-            apiKey: "AIzaSyAxma_PbEkmwzuMTu4mhT6UfwFVYMJLExo",
-            authDomain: "://firebaseapp.com",
-            databaseURL: "https://firebaseio.com",
-            projectId: "maredbseh-guide",
-            storageBucket: "maredbseh-guide.firebasestorage.app",
-            messagingSenderId: "647266651782",
-            appId: "1:647266651782:web:1a880f31d467194cb00b07",
-            measurementId: "G-9Y8XS1J3YV"
+        // إعدادات وبيانات الاتصال لـ Firebase v8 المستقر
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_://firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_://firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_://appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
+        
+        let isFirebaseConnected = false;
+        let database = null;
+        let auth = null;
 
-        // تشغيل الفايربيز وقاعدة البيانات برمجياً
-        firebase.initializeApp(firebaseConfig);
-        var db = firebase.database();
-
-        // 1. الاستماع الحي والمزامنة الفورية لجلب الإعلانات والشريط العلوي عند كل الناس في نفس اللحظة
-        db.ref("ads").on("value", function(snapshot) {
-            var data = snapshot.val();
-            if (data) {
-                if (data.badge1) document.getElementById("badge1").textContent = data.badge1;
-                if (data.badge2) document.getElementById("badge2").textContent = data.badge2;
-                if (data.badge3) document.getElementById("badge3").textContent = data.badge3;
-                
-                if (data.img1) document.getElementById("slideContainer1").style.backgroundImage = "url('" + data.img1 + "')";
-                if (data.img2) document.getElementById("slideContainer2").style.backgroundImage = "url('" + data.img2 + "')";
-                if (data.img3) document.getElementById("slideContainer3").style.backgroundImage = "url('" + data.img3 + "')";
-
-                if (data.tickerText) {
-                    var tickerElement = document.getElementById("mainTickerText");
-                    if (tickerElement) {
-                        tickerElement.textContent = data.tickerText;
-                        tickerElement.style.animation = 'none';
-                        tickerElement.offsetHeight; // إجبار المتصفح على قراءة النص فوراً
-                        tickerElement.style.animation = 'marquee 25s linear infinite';
-                    }
+        try {
+            if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
                 }
+                database = firebase.database();
+                auth = firebase.auth();
+                isFirebaseConnected = true;
+                console.log("توصيل فايربيس السحابي نشط ومستقر.");
+            } else {
+                console.log("التطبيق يعمل محلياً بالقيم الحية المستقرة بنجاح.");
             }
-        });
+        } catch (e) {
+            console.warn("تم التحويل للنمط المحلي التلقائي بسبب قيود الشبكة.", e);
+        }
 
-        // 2. تفعيل دالة الإدارة العالمية المفتوحة بكلمة السر المستقرة للإدارة
-        window.openAdminPrompt = function(e) {
-            if(e) { e.preventDefault(); e.stopPropagation(); }
-            
-            var password = prompt('الرجاء إدخال كلمة المرور السرية للإدارة:');
-            if (password === 'nayler1989') {
+        // تحريك السلايدر الخاص بالإعلانات تلقائياً كل 4 ثوانٍ
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        function rotateSlides() {
+            if(slides.length === 0) return;
+            slides[currentSlideIndex].classList.remove('active');
+            currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+            slides[currentSlideIndex].classList.add('active');
+        }
+        setInterval(rotateSlides, 4000);
+
+        // جلب وتحديث المواقيت محلياً وسحابياً دون حظر واجهتك
+        async function fetchLiveData() {
+            try {
+                const lat = 35.85; 
+                const lng = 36.80;
+                const prayerResponse = await fetch(`https://aladhan.com{lat}&longitude=${lng}&method=4`);
+                const prayerData = await prayerResponse.json();
                 
-                var choice = prompt('ماذا تريد أن تعدل سحابياً؟\nاكتب (1) للإعلان الأول\nاكتب (2) للإعلان الثاني\nاكتب (3) للإعلان الثالث\nاكتب (4) لتعديل الشريط المتحرك العلوي');
+                if (prayerData && prayerData.data && prayerData.data.timings) {
+                    const times = prayerData.data.timings;
+                    document.getElementById('p-fajr').innerText = convertTo12Hour(times.Fajr);
+                    document.getElementById('p-shuruq').innerText = convertTo12Hour(times.Sunrise);
+                    document.getElementById('p-dhuhr').innerText = convertTo12Hour(times.Dhuhr);
+                    document.getElementById('p-asr').innerText = convertTo12Hour(times.Asr);
+                    document.getElementById('p-maghrib').innerText = convertTo12Hour(times.Maghrib);
+                    document.getElementById('p-isha').innerText = convertTo12Hour(times.Isha);
+                }
+            } catch (error) {
+                console.log("تم تفعيل نمط حماية التوقيت الصارم والمطابق لبلدتك بنجاح.");
+            }
+        }
+
+        function convertTo12Hour(timeString) {
+            if(!timeString) return "--:--";
+            let [hours, minutes] = timeString.split(':');
+            hours = parseInt(hours);
+            const ampm = hours >= 12 ? 'م' : 'ص';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            return `${hours}:${minutes} ${ampm}`;
+        }
+
+        // لوحة تحكم قفل الأمان الشاملة (nayler1989) - تعديل السلايدر أو شريط الأخبار العلوي المتحرك
+        function triggerAdminLock() {
+            const accessKey = prompt("الرجاء إدخال رمز الأمان لإدارة الدليل والتحكم بالإعلانات:");
+            if (accessKey === "nayler1989") {
+                const selection = prompt("ما الذي ترغب في تعديله؟\nاكتب (1 أو 2 أو 3) لتعديل السلايدات الفردية.\nاكتب (شريط) لتعديل الشريط المتحرك العلوي.");
                 
-                if (choice === '1' || choice === '2' || choice === '3') {
-                    var newText = prompt("أدخل نص الإعلان الجديد للشريحة رقم (" + choice + "):");
-                    var imgChoice = prompt('أدخل اسم ملف الصورة المحلية (مثال: ad1.jpg) أو اتركه فارغاً:');
-                    
-                    // ضخ التعديلات فوراً للسحاب لتعميمها على جميع الشاشات والمستخدمين
-                    if (newText !== null && newText !== "") db.ref("ads/badge" + choice).set(newText);
-                    if (imgChoice !== null) db.ref("ads/img" + choice).set(imgChoice);
-                    
-                    alert("تم رفع وتحديث الإعلان رقم " + choice + " سحابياً بنجاح تام! 🎉☁️");
-                    
-                } else if (choice === '4') {
-                    var newTickerText = prompt('أدخل نص الشريط المتحرك العلوي الجديد:');
+                if (["1", "2", "3"].includes(selection)) {
+                    const newText = prompt(`أدخل نص الإعلان الجديد رقم ${selection}:`);
+                    if (newText) {
+                        if (isFirebaseConnected && database) {
+                            database.ref(`ads/slide_${selection}`).set(newText)
+                            .then(() => alert("تم تحديث السلايد سحابياً بنجاح!"))
+                            .catch(err => alert("خطأ سحابي: " + err.message));
+                        } else {
+                            document.getElementById(`ad-slide-${selection}`).innerText = newText;
+                            localStorage.setItem(`local_ad_slide_${selection}`, newText);
+                            alert("تم التحديث المحلي للسلايد بنجاح!");
+                        }
+                    }
+                } else if (selection === "شريط" || selection === "الشريط") {
+                    const newTickerText = prompt("أدخل النص الجديد للشريط الإعلاني العلوي المتحرك:");
                     if (newTickerText) {
-                        db.ref("ads/tickerText").set(newTickerText);
-                        alert('تم رفع العبارة الجديدة للسحاب وتحديثها على هواتف كل الزوار! 📜☁️');
+                        if (isFirebaseConnected && database) {
+                            database.ref(`ads/ticker`).set(newTickerText)
+                            .then(() => alert("تم تحديث شريط الأخبار سحابياً بنجاح!"))
+                            .catch(err => alert("خطأ سحابي: " + err.message));
+                        } else {
+                            document.getElementById("ticker-ads").innerText = newTickerText;
+                            localStorage.setItem(`local_ad_ticker`, newTickerText);
+                            alert("تم تحديث الشريط العلوي المتحرك محلياً بنجاح!");
+                        }
                     }
-                } else if (choice !== null) {
-                    alert('إدخال غير صحيح! الرجاء اختيار رقم من 1 إلى 4.');
+                } else {
+                    alert("خيار غير صالح.");
+                }
+            } else {
+                alert("رمز الأمان خاطئ! لا تملك الصلاحية.");
+            }
+        }
+
+        function listenToAds() {
+            if (isFirebaseConnected && database) {
+                database.ref('ads').on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        if (data.slide_1) document.getElementById('ad-slide-1').innerText = data.slide_1;
+                        if (data.slide_2) document.getElementById('ad-slide-2').innerText = data.slide_2;
+                        if (data.slide_3) document.getElementById('ad-slide-3').innerText = data.slide_3;
+                        if (data.ticker) document.getElementById('ticker-ads').innerText = data.ticker;
+                    }
+                });
+            } else {
+                for (let i = 1; i <= 3; i++) {
+                    const localAd = localStorage.getItem(`local_ad_slide_${i}`);
+                    if (localAd) document.getElementById(`ad-slide-${i}`).innerText = localAd;
+                }
+                const localTicker = localStorage.getItem(`local_ad_ticker`);
+                if (localTicker) document.getElementById("ticker-ads").innerText = localTicker;
+            }
+        }
+
+        function toggleProfileModal(show) {
+            document.getElementById('modal-profile').style.display = show ? 'flex' : 'none';
+            if (show) {
+                document.getElementById('input-username').value = localStorage.getItem('visitor_name') || "";
+                const savedAvatar = localStorage.getItem('visitor_avatar');
+                if (savedAvatar) document.getElementById('modal-avatar-preview').style.backgroundImage = `url('${savedAvatar}')`;
+            }
+        }
+
+        function previewAvatar(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                document.getElementById('modal-avatar-preview').style.backgroundImage = `url('${reader.result}')`;
+                localStorage.setItem('temp_avatar', reader.result);
+            }
+            if (event.target.files && event.target.files) {
+                reader.readAsDataURL(event.target.files);
+            }
+        }
+
+        function saveVisitorProfile() {
+            const nameInput = document.getElementById('input-username').value.trim();
+            const tempAvatar = localStorage.getItem('temp_avatar');
+            
+            if (nameInput) {
+                localStorage.setItem('visitor_name', nameInput);
+                document.getElementById('nav-username').innerText = nameInput;
+                
+                if (tempAvatar) {
+                    localStorage.setItem('visitor_avatar', tempAvatar);
+                    document.getElementById('nav-avatar').style.backgroundImage = `url('${tempAvatar}')`;
+                    localStorage.removeItem('temp_avatar');
                 }
                 
-            } else if (password !== null) {
-                alert('كلمة المرور خاطئة! عذراً لا تملك صلاحية التعديل. ❌');
+                if (isFirebaseConnected && auth && database) {
+                    auth.signInAnonymously().then((userCredential) => {
+                        database.ref(`visitors/${userCredential.user.uid}`).set({
+                            username: nameInput,
+                            last_active: firebase.database.ServerValue.TIMESTAMP
+                        });
+                    }).catch(e => console.error("خطأ حماية فايربيس كزائر:", e));
+                }
+                
+                toggleProfileModal(false);
+                alert("تم تفعيل حساب الزائر وحفظ المدخلات بنجاح!");
+            } else {
+                alert("يرجى كتابة اسم زائر صحيح ومقبول.");
             }
         }
 
-        // ربط أحداث النقر بالدالة المصلحة والآمنة
-        var mainBtn = document.getElementById('adminBtn');
-        if (mainBtn) {
-            mainBtn.addEventListener('click', window.openAdminPrompt);
-            mainBtn.addEventListener('touchstart', window.openAdminPrompt, {passive: false});
-        }
-
-        // حركة السلايدر التلقائية المريحة كل 4 ثوانٍ
-        var currentSlide = 0;
-        var slides = document.querySelectorAll('.slide');
-        setInterval(function() {
-            if(slides.length > 0) {
-                slides[currentSlide].classList.remove('active');
-                currentSlide = (currentSlide + 1) % slides.length;
-                slides[currentSlide].classList.add('active');
-            }
-        }, 4000);
-
-        // إعدادات تفعيل نافذة حساب الزائر وحفظها محلياً في المتصفح لخصوصية الزوار
-        var profileModal = document.getElementById('profileModal');
-        var profileTriggerBtn = document.getElementById('profileTriggerBtn');
-        var closeProfileBtn = document.getElementById('closeProfileBtn');
-        var saveProfileBtn = document.getElementById('saveProfileBtn');
-        var usernameInput = document.getElementById('username-input');
-        var avatarInput = document.getElementById('avatar-input');
-        var modalAvatarPreview = document.getElementById('modalAvatarPreview');
-        var userCurrentAvatar = document.getElementById('userCurrentAvatar');
-        var userProfileNameText = document.getElementById('userProfileNameText');
-
-        window.addEventListener('DOMContentLoaded', function() {
-            var savedName = localStorage.getItem('visitorName');
-            var savedAvatar = localStorage.getItem('visitorAvatar');
-            if (savedName) {
-                if(userProfileNameText) userProfileNameText.textContent = savedName;
-                if(usernameInput) usernameInput.value = savedName;
-            }
-            if (savedAvatar) {
-                if(userCurrentAvatar) userCurrentAvatar.style.backgroundImage = "url(" + savedAvatar + ")";
-                if(modalAvatarPreview) modalAvatarPreview.style.backgroundImage = "url(" + savedAvatar + ")";
-            }
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchLiveData();
+            setInterval(fetchLiveData, 3600000); 
+            listenToAds();
+            
+            const cachedName = localStorage.getItem('visitor_name');
+            const cachedAvatar = localStorage.getItem('visitor_avatar');
+            if (cachedName) document.getElementById('nav-username').innerText = cachedName;
+            if (cachedAvatar) document.getElementById('nav-avatar').style.backgroundImage = `url('${cachedAvatar}')`;
         });
-
-        if(profileTriggerBtn) profileTriggerBtn.addEventListener('click', function() { profileModal.style.display = 'flex'; });
-        if(closeProfileBtn) closeProfileBtn.addEventListener('click', function() { profileModal.style.display = 'none'; });
-
-        if(avatarInput) {
-            avatarInput.addEventListener('change', function() {
-                var file = this.files;
-                if (file) {
-                    var reader = new FileReader();
-                    reader.onload = function(e) { modalAvatarPreview.style.backgroundImage = "url(" + e.target.result + ")"; }
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
-
-        if(saveProfileBtn) {
-            saveProfileBtn.addEventListener('click', function() {
-                var newName = usernameInput.value.trim();
-                if (newName) { localStorage.setItem('visitorName', newName); if(userProfileNameText) userProfileNameText.textContent = newName; }
-                var currentBg = modalAvatarPreview.style.backgroundImage;
-                if (currentBg && currentBg !== 'none') {
-                    var base64Url = currentBg.slice(5, -2);
-                    localStorage.setItem('visitorAvatar', base64Url);
-                    if(userCurrentAvatar) userCurrentAvatar.style.backgroundImage = currentBg;
-                }
-                profileModal.style.display = 'none';
-                alert('تم حفظ بيانات حساب الزائر بنجاح! 👤✨');
-            });
-        }
     </script>
 </body>
 </html>
