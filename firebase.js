@@ -1,21 +1,22 @@
-// استدعاء حزم الفايربيز المعتمدة من Google للمتصفحات
+// 1. استدعاء حزم الفايربيز المعتمدة من Google المتوافقة مع المتصفحات الساكنة
 import { initializeApp } from "https://gstatic.com";
 import { getDatabase, ref, set, onValue } from "https://gstatic.com";
 
-// ⚠️ ضع بيانات مشروعك الحقيقي من لوحة تحكم Firebase هنا
+// 2. كود بيانات مشروعك الحقيقي maredbseh-guide المأخوذ من شاشتك
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_://firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT_://firebaseio.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_://appspot.com",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyAxma_PbEkmwzuMTu4mhT6UfwFVYMJLExo",
+    authDomain: "://firebaseapp.com",
+    databaseURL: "https://firebaseio.com",
+    projectId: "maredbseh-guide",
+    storageBucket: "maredbseh-guide.firebasestorage.app",
+    messagingSenderId: "647266651782",
+    appId: "1:647266651782:web:1a880f31d467194cb00b07",
+    measurementId: "G-9Y8XS1J3YV"
 };
 
-// تشغيل الفايربيز وربط قاعدة البيانات برمجياً
+// 3. تشغيل الـ App وقاعدة البيانات برمجياً بالدليل الشامل
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// تصدير الأدوات للمزامنة مع الملفات الأخرى
+// 4. تصدير الأدوات لتشغيل المزامنة اللحظية الفورية مع الواجهات الأخرى
 export { db, ref, set, onValue };
