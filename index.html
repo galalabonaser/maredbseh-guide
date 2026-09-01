@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>دليل خدمات معردبسة</title>
     
-    <!-- ربط أيقونة التطبيق الاحترافية لضمان ظهورها عند التثبيت على شاشة الجوال -->
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
     
@@ -63,12 +62,12 @@
         .menu-item span.icon { font-size: 30px; transition: transform 0.3s ease; }
         .menu-item:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.4); filter: brightness(1.15); }
         
-        .item-market { background: linear-gradient(135deg, #007bff, #004494); }
-        .item-jobs { background: linear-gradient(135deg, #17a2b8, #0f6f7e); }
-        .item-offers { background: linear-gradient(135deg, #ff9900, #cc5200); }
-        .item-emergency { background: linear-gradient(135deg, #dc3545, #991b1b); }
-        .item-clothes { background: linear-gradient(135deg, #9333ea, #6b21a8); }
-        .item-contact { background: linear-gradient(135deg, #28a745, #14532d); }
+        .item-market { background: #007bff; background: linear-gradient(135deg, #007bff, #004494); }
+        .item-jobs { background: #17a2b8; background: linear-gradient(135deg, #17a2b8, #0f6f7e); }
+        .item-offers { background: #ff9900; background: linear-gradient(135deg, #ff9900, #cc5200); }
+        .item-emergency { background: #dc3545; background: linear-gradient(135deg, #dc3545, #991b1b); }
+        .item-clothes { background: #9333ea; background: linear-gradient(135deg, #9333ea, #6b21a8); }
+        .item-contact { background: #28a745; background: linear-gradient(135deg, #28a745, #14532d); }
         
         .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 500px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 12px 20px; border-radius: 30px; display: flex; justify-content: space-around; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100; border: 1px solid rgba(255, 255, 255, 0.2); }
         .nav-link { display: flex; flex-direction: column; align-items: center; color: #1e3c72; text-decoration: none; font-size: 11px; font-weight: 700; gap: 4px; }
@@ -111,7 +110,7 @@
         </div>
         <div class="workspace-layout">
             
-            <!-- 1. كرت مواقيت الصلاة (يظهر بالأعلى فيزيائياً) -->
+            <!-- 1. كرت مواقيت الصلاة -->
             <div class="panel-card prayer-card">
                 <div class="panel-title">🕌 مواقيت الصلاة - إدلب وريفها</div>
                 <div class="prayer-list-box">
@@ -151,7 +150,7 @@
                 </a>
             </div>
 
-            <!-- 3. كرت البورصة والأسعار يستقر في الأسفل -->
+            <!-- 3. كرت البورصة والأسعار -->
             <div class="panel-card exchange-card">
                 <div class="panel-title">💲 أسعار السوق الموازي (سوري)</div>
                 <table class="currency-table">
@@ -181,7 +180,7 @@
 
     </div>
 
-    <!-- 🛠️ بنية نافذة حساب الزائر التفاعلية المنبثقة -->
+    <!-- بنية نافذة حساب الزائر التفاعلية المنبثقة -->
     <div class="profile-modal" id="profileModal">
         <div class="profile-card">
             <h3 style="color: #1e3c72;">إعدادات حساب الزائر</h3>
@@ -205,11 +204,27 @@
         <a href="offers.html" class="nav-link">🔥<span>العروض</span></a>
         <a href="contact.html" class="nav-link">📩<span>الشكاوى</span></a>
     </div>
-    <!-- كود الجافا سكريبت المطور بنظام Module للاتصال بـ firebase.js والمزامنة الفورية -->
+    <!-- كود الجافا سكريبت السحابي المدمج كلياً والذاتي الاتصال لحل مشكلة الـ CORS نهائياً -->
     <script type="module">
-        import { db, ref, set, onValue } from "./firebase.js";
+        import { initializeApp } from "https://gstatic.com";
+        import { getDatabase, ref, set, onValue } from "https://gstatic.com";
 
-        // 1. الاستماع الحي وجلب الإعلانات والشريط فوراً من السحاب لجميع الأجهزة والزوار
+        // مفاتيح سيرفر maredbseh-guide الحقيقية لضمان عمل قاعدة البيانات أونلاين ومحلياً
+        const firebaseConfig = {
+            apiKey: "AIzaSyAxma_PbEkmwzuMTu4mhT6UfwFVYMJLExo",
+            authDomain: "://firebaseapp.com",
+            databaseURL: "https://firebaseio.com",
+            projectId: "maredbseh-guide",
+            storageBucket: "maredbseh-guide.firebasestorage.app",
+            messagingSenderId: "647266651782",
+            appId: "1:647266651782:web:1a880f31d467194cb00b07",
+            measurementId: "G-9Y8XS1J3YV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // 1. المزامنة اللحظية الفورية لاستقبال الإعلانات والشريط العلوي
         onValue(ref(db, "ads"), (snapshot) => {
             const data = snapshot.val();
             if (data) {
@@ -223,17 +238,18 @@
 
                 if (data.tickerText) {
                     const tickerElement = document.getElementById("mainTickerText");
-                    tickerElement.textContent = data.tickerText;
-                    // سحر الإنعاش الفوري للحركة
-                    tickerElement.style.animation = 'none';
-                    tickerElement.offsetHeight;
-                    tickerElement.style.animation = 'marquee 25s linear infinite';
+                    if (tickerElement) {
+                        tickerElement.textContent = data.tickerText;
+                        tickerElement.style.animation = 'none';
+                        tickerElement.offsetHeight;
+                        tickerElement.style.animation = 'marquee 25s linear infinite';
+                    }
                 }
             }
         });
 
-        // 2. لوحة تحكم الإدارة لرفع التعديلات للـ Firebase ليتغير تلقائياً عند الجميع
-        function openAdminPrompt(e) {
+        // 2. جعل الدالة عالمية ومربوطة بـ window لكسر حظر النوافذ المنبثقة نهائياً
+        window.openAdminPrompt = function(e) {
             if(e) { e.preventDefault(); e.stopPropagation(); }
             
             const password = prompt('الرجاء إدخال كلمة المرور السرية للإدارة:');
@@ -245,7 +261,6 @@
                     const newText = prompt(`أدخل نص الإعلان الجديد للشريحة رقم (${choice}):`);
                     const imgChoice = prompt('أدخل اسم ملف الصورة المحلية (مثال: ad1.jpg) أو اتركه فارغاً:');
                     
-                    // رفع فوري لقاعدة البيانات السحابية لتعميمها على جميع الشاشات
                     if (newText !== null && newText !== "") set(ref(db, `ads/badge${choice}`), newText);
                     if (imgChoice !== null) set(ref(db, `ads/img${choice}`), imgChoice);
                     
@@ -268,11 +283,11 @@
 
         const mainBtn = document.getElementById('adminBtn');
         if (mainBtn) {
-            mainBtn.addEventListener('click', openAdminPrompt);
-            mainBtn.addEventListener('touchstart', openAdminPrompt, {passive: false});
+            mainBtn.addEventListener('click', window.openAdminPrompt);
+            mainBtn.addEventListener('touchstart', window.openAdminPrompt, {passive: false});
         }
 
-        // حركة السلايدر التلقائية
+        // حركة السلايدر التلقائية المريحة كل 4 ثوانٍ
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
         setInterval(() => {
@@ -283,7 +298,7 @@
             }
         }, 4000);
 
-        // إعدادات حساب الزائر المحلي المستقر لخصوصية وأمان المستخدم
+        // إعدادات تفعيل نافذة حساب الزائر وحفظها محلياً
         const profileModal = document.getElementById('profileModal');
         const profileTriggerBtn = document.getElementById('profileTriggerBtn');
         const closeProfileBtn = document.getElementById('closeProfileBtn');
