@@ -1,0 +1,28 @@
+name: التحديث التلقائي لأسعار الصرف كل ساعة
+
+on:
+  schedule:
+    # تشغيل السكريبت تلقائياً عند رأس كل ساعة برمجية مجاناً
+    - cron: '0 * * * *'
+  workflow_dispatch: # يتيح لك هذا الزر تشغيل التحديث يدوياً من موقع جيت هاب للتجربة فوراً
+
+jobs:
+  update-prices:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: سحب ملفات المشروع من المستودع
+      uses: actions/checkout@v3
+
+    - name: إعداد بيئة تشغيل Node.js المجانية
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: تثبيت المكتبات البرمجية اللازمة للعمل
+      run: npm install firebase-admin axios cheerio
+
+    - name: تشغيل سكريبت كشط غولد ماستر وتحديث Firebase
+      env:
+        FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      run: node update-rates.js
