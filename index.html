@@ -11,7 +11,7 @@
     <!-- استدعاء خط تاجويل ومكتبات فايربيس المستقرة v8 -->
     <link rel="preconnect" href="https://googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://googleapis.com" rel="stylesheet">
     
     <script src="https://gstatic.com"></script>
     <script src="https://gstatic.com"></script>
@@ -22,24 +22,106 @@
         html { scroll-behavior: smooth; } /* تفعيل التمرير الانسيابي السلس للموقع */
         body { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: #ffffff; display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 140px; overflow-x: hidden; }
         
-        /* شريط التنبيهات والأخبار المتحرك */
-        .ticker-container { background: #ffffff; color: #1e3c72; overflow: hidden; white-space: nowrap; padding: 14px 0; font-weight: 700; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border-bottom: 3px solid #ffd700; width: 100%; position: relative; }
-        .ticker-text { display: inline-block; padding-left: 100%; animation: marquee 22s linear infinite; }
-        @keyframes marquee { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(100%, 0, 0); } }
-        
+        /* --- 1. التنسيقات المحدثة لأشرطة الأذكار المدمجة الجديدة بدلاً من القديمة --- */
+        .dhikr-bar-main {
+            background-color: #ff9f1c;
+            color: #000;
+            font-weight: bold;
+            padding: 12px 0;
+            font-size: 16px;
+            overflow: hidden;
+            white-space: nowrap;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .dhikr-bar-main marquee { margin: 0; }
+
+        /* --- 2. تنسيق بطاقة عرض الميديا والصور المحدثة بدلاً من السلايدر القديم --- */
+        .media-display-card-main {
+            background-color: #19376d;
+            border-radius: 16px;
+            padding: 15px;
+            text-align: center;
+            margin: 0 auto 15px auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            min-height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
+        }
+        .media-display-card-main img, .media-display-card-main video {
+            max-width: 100%;
+            height: auto;
+            max-height: 250px;
+            border-radius: 10px;
+            object-fit: contain;
+        }
+        .no-media-main { color: #a5d7e8; font-style: italic; font-size: 14px; }
+
+        /* --- 3. تنسيق شريط النشرة المركزية الصرف المحدث --- */
+        .currency-bar-main {
+            background-color: #1a5f7a;
+            color: #fff;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            overflow: hidden;
+            white-space: nowrap;
+            margin: 0 auto 20px auto;
+            border: 1px solid #57c5b6;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
+        }
+        .currency-bar-main marquee { margin: 0; width: 100%; }
+
+        /* --- 4. تنسيق أزرار ولوحة تحكم المشرف المدمجة --- */
+        .admin-toggle-btn-main {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            display: block;
+            margin: 10px auto;
+            width: 110px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .admin-panel-main {
+            background-color: #122c54;
+            border: 2px dashed #ff9f1c;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 15px auto;
+            display: none;
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
+            text-align: right;
+        }
+        .admin-panel-main h3 { margin-top: 0; color: #ff9f1c; font-size: 16px; border-bottom: 1px solid #2a4b7c; padding-bottom: 8px;}
+        .form-group-main { margin-bottom: 12px; }
+        .form-group-main label { display: block; margin-bottom: 5px; font-size: 13px; color: #a5d7e8; font-weight: bold; }
+        .form-group-main input[type="text"], .form-group-main input[type="file"] {
+            width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #2a4b7c; box-sizing: border-box; background-color: #fff; color: #000;
+        }
+        .control-buttons-main { display: flex; gap: 8px; margin-top: 10px; }
+        .save-btn-main { flex: 2; background-color: #4CAF50; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .delete-btn-main { flex: 1; background-color: #f44336; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+
         .main-container { width: 100%; max-width: 1000px; display: flex; flex-direction: column; gap: 20px; margin: 20px auto; padding: 0 15px 40px 15px; }
         
-        /* سلايدر الإعلانات والعروض اليومية */
-        .carousel-wrapper { position: relative; width: 100%; max-width: 600px; margin: 0 auto; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid rgba(255, 255, 255, 0.15); height: 160px; }
-        .carousel-slides { width: 100%; height: 100%; position: relative; }
-        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.6s ease-in-out; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 15px; text-align: center; }
-        .slide.active { opacity: 1; z-index: 2; }
-        .slide-1 { background: linear-gradient(45deg, #111e38, #2c3e50); }
-        .slide-2 { background: linear-gradient(45deg, #16a085, #2c3e50); }
-        .slide-3 { background: linear-gradient(45deg, #2980b9, #2c3e50); }
-        .slide-text-badge { color: #fff; padding: 8px 16px; font-size: 14px; font-weight: bold; background: rgba(0, 0, 0, 0.6); border-radius: 8px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); }
-        .admin-carousel-control { position: absolute; top: 12px; left: 12px; background: rgba(255, 215, 0, 0.9); color: #1e3c72; border: none; padding: 6px 14px; border-radius: 20px; font-size: 11px; cursor: pointer; font-weight: bold; z-index: 999; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        
+       
         /* صندوق وضع الزائر */
         .profile-trigger-box { display: flex; justify-content: center; margin: 5px auto; }
         .btn-profile-trigger { background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: #fff; padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(5px); }
@@ -97,28 +179,57 @@
 </head>
 <body id="app-top"> <!-- معرف الشاشة الرئيسية لأعلى الصفحة -->
 
-    <!-- شريط الإعلانات التنبيهي العلوي المتحرك (مرتبط بزر الوظائف) -->
-    <div class="ticker-container" id="section-ticker">
-        <div class="ticker-text" id="ticker-ads">العروض والوظائف الشاغرة أولاً بأول.. مرحباً بكم في دليل معردبسة الرسمي.</div>
-    </div>
 
     <div class="main-container">
         
-        <!-- مساحة سلايدر الإعلانات والعروض اليومية (مرتبط بزر العروض) -->
-        <div class="carousel-wrapper" id="section-carousel">
-            <button class="admin-carousel-control" onclick="triggerAdminLock()">تعديل الإعلان ⚙️</button>
-            <div class="carousel-slides">
-                <div class="slide slide-1 active">
-                    <div class="slide-text-badge" id="ad-slide-1">السلام عليكم ورحمة الله وبركاته</div>
-                </div>
-                <div class="slide slide-2">
-                    <div class="slide-text-badge" id="ad-slide-2">تخفيضات كبرى في أسواق البلدة - قسم العروض</div>
-                </div>
-                <div class="slide slide-3">
-                    <div class="slide-text-badge" id="ad-slide-3">دليل معردبسة الرقمي - خدمتك أصبحت أسهل وأسرع</div>
-                </div>
+             <!-- 1️⃣ شريط الأذكار المتحرك الجديد في الواجهة الرئيسية -->
+        <div class="dhikr-bar-main">
+            <marquee id="dhikrMarqueeMain" behavior="scroll" direction="left" scrollamount="5">
+                سبحان الله وبحمده، سبحان الله العظيم • لا إله إلا الله وحده لا شريك له • أستغفر الله وأتوب إليه
+            </marquee>
+        </div>
+
+        <!-- 2️⃣ خانة عرض الصورة أو مقطع الفيديو المرفوع المحدثة -->
+        <div class="media-display-card-main" id="mediaContainerMain">
+            <div class="no-media-main" id="noMediaTextMain">لم يتم رفع أي ميديا إعلانية بعد</div>
+        </div>
+
+        <!-- 3️⃣ شريط سعر الصرف المتحرك (النشرة المركزية) المحدث -->
+        <div class="currency-bar-main">
+            <marquee id="currencyMarqueeMain" behavior="scroll" direction="left" scrollamount="4">
+                سعر الصرف اليوم: يرجى تحديث السعر من لوحة التحكم
+            </marquee>
+        </div>
+
+        <!-- ⚙️ زر فتح لوحة التحكم المدمج للمشرف -->
+        <!-- 🟢 الزر المحدث ليتصل بالدالة الصحيحة ويعمل فوراً عند الضغط -->
+<button class="admin-toggle-btn-main" onclick="triggerAdminLock()">تعديل الإعلان ⚙️</button>
+
+        <!-- 🛠️ لوحة التحكم المحمية بكلمة مرور المدمجة حديثاً -->
+        <div class="admin-panel-main" id="adminPanelMain">
+            <h3>⚙️ لوحة تحكم الواجهة (تحديث وحفظ تلقائي)</h3>
+            
+            <div class="form-group-main">
+                <label>تحديث شريط الأذكار العلوي:</label>
+                <input type="text" id="inputDhikrMain" placeholder="اكتب الأذكار هنا وفصل بينها بنقطة •">
+            </div>
+
+            <div class="form-group-main">
+                <label>رفع صورة أو فيديو جديد للواجهة الرئيسية:</label>
+                <input type="file" id="inputMediaMain" accept="image/*,video/*">
+            </div>
+
+            <div class="form-group-main">
+                <label>تحديث شريط أسعار الصرف (النشرة المركزية):</label>
+                <input type="text" id="inputCurrencyMain" placeholder="مثال: النشرة المركزية 6000 | الدولار: ...">
+            </div>
+
+            <div class="control-buttons-main">
+                <button class="save-btn-main" onclick="saveChangesMain()">حفظ التعديلات ونشرها</button>
+                <button class="delete-btn-main" onclick="clearMediaMain()">حذف الميديا</button>
             </div>
         </div>
+
 
         <!-- صندوق التحكم بالزائر والملف الشخصي -->
         <div class="profile-trigger-box">
@@ -138,44 +249,7 @@
 </div>
 
 
-        <!-- لوحة أسكار الصرف (مرتبطة بزر سوق البلدة) -->
-        <div class="panel-card" id="section-currency">
-            <div class="panel-title">💵 أسعار الصرف مقابل الليرة السورية (SYP) اليوم</div>
-            <table class="currency-table">
-                <tr>
-                    <td>🇺🇸 دولار أمريكي (USD)</td>
-                    <td>
-                        <div class="rate-container">
-                            <div><span class="rate-label-sub">شراء:</span><span id="usd-buy">131.50</span></div>
-                            <div><span class="rate-label-sub">مبيع:</span><span id="usd-sell">132.00</span></div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>🇹🇷 ليرة تركية (TRY)</td>
-                    <td>
-                        <div class="rate-container">
-                            <div><span class="rate-label-sub">شراء:</span><span id="try-buy">2.71</span></div>
-                            <div><span class="rate-label-sub">مبيع:</span><span id="try-sell">2.74</span></div>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- لوحة مواقيت الصلاة الدقيقة -->
-        <div class="panel-card">
-            <div class="panel-title">🕌 مواقيت الصلاة في سراقب وريفها (تحديث مباشر)</div>
-            <div class="prayer-list-box">
-                <div class="prayer-row-item"><span class="prayer-name">الفجر</span><span class="prayer-time" id="p-fajr">04:33 ص</span></div>
-                <div class="prayer-row-item"><span class="prayer-name">الشروق</span><span class="prayer-time" id="p-shuruq">06:01 ص</span></div>
-                <div class="prayer-row-item"><span class="prayer-name">الظهر</span><span class="prayer-time" id="p-dhuhr">12:33 م</span></div>
-                <div class="prayer-row-item"><span class="prayer-name">العصر</span><span class="prayer-time" id="p-asr">04:11 م</span></div>
-                <div class="prayer-row-item"><span class="prayer-name">المغرب</span><span class="prayer-time" id="p-maghrib">07:04 م</span></div>
-                <div class="prayer-row-item"><span class="prayer-name">العشاء</span><span class="prayer-time" id="p-isha">08:34 م</span></div>
-            </div>
-        </div>
-
+        
     </div>
     <!-- نافذة تعديل بيانات الزائر المنبثقة -->
     <div class="profile-modal" id="modal-profile">
@@ -289,45 +363,131 @@
             return `${hours}:${minutes} ${ampm}`;
         }
 
-        // لوحة تحكم قفل الأمان الشاملة (nayler1989) - تعديل السلايدر أو شريط الأخبار العلوي المتحرك
-        function triggerAdminLock() {
-            const accessKey = prompt("الرجاء إدخال رمز الأمان لإدارة الدليل والتحكم بالإعلانات:");
-            if (accessKey === "nayler1989") {
-                const selection = prompt("ما الذي ترغب في تعديله؟\nاكتب (1 أو 2 أو 3) لتعديل السلايدات الفردية.\nاكتب (شريط) لتعديل الشريط المتحرك العلوي.");
-                
-                if (["1", "2", "3"].includes(selection)) {
-                    const newText = prompt(`أدخل نص الإعلان الجديد رقم ${selection}:`);
-                    if (newText) {
-                        if (isFirebaseConnected && database) {
-                            database.ref(`ads/slide_${selection}`).set(newText)
-                            .then(() => alert("تم تحديث السلايد سحابياً بنجاح!"))
-                            .catch(err => alert("خطأ سحابي: " + err.message));
-                        } else {
-                            document.getElementById(`ad-slide-${selection}`).innerText = newText;
-                            localStorage.setItem(`local_ad_slide_${selection}`, newText);
-                            alert("تم التحديث المحلي للسلايد بنجاح!");
-                        }
+               // --- 1. متغيرات ودوال الأشرطة المدمجة الجديدة في الصفحة الرئيسية ---
+        const ADMIN_PASSWORD_MAIN = "123"; 
+
+        // دالة التحقق من كلمة المرور لفتح لوحة التحكم المدمجة
+        function openAdminPanelMain() {
+            let passwordInput = prompt("الرجاء إدخال كلمة المرور للوصول للوحة التحكم:");
+            if (passwordInput === ADMIN_PASSWORD_MAIN) {
+                document.getElementById('adminPanelMain').style.display = 'block';
+                alert("تم التحقق بنجاح! يمكنك الآن تعديل بيانات الواجهة الرئيسية.");
+            } else if (passwordInput !== null) {
+                alert("كلمة المرور خاطئة! لا تملك صلاحية التعديل.");
+            }
+        }
+
+        // دالة حفظ التعديلات وتثبيتها تلقائياً داخل ذاكرة المتصفح
+        function saveChangesMain() {
+            // أ. حفظ وتحديث الأذكار
+            let newDhikr = document.getElementById('inputDhikrMain').value;
+            if(newDhikr.trim() !== "") {
+                document.getElementById('dhikrMarqueeMain').innerText = newDhikr;
+                localStorage.setItem('mainLocalDhikr', newDhikr);
+            }
+
+            // ب. معالجة وحفظ الملف المرفوع (صورة أو فيديو محلي للواجهة)
+            let mediaInput = document.getElementById('inputMediaMain');
+            if(mediaInput.files && mediaInput.files) {
+                let file = mediaInput.files[0];
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    let mediaContainer = document.getElementById('mediaContainerMain');
+                    mediaContainer.innerHTML = ""; // تفريغ الحاوية
+                    
+                    if(file.type.startsWith('image/')) {
+                        let img = document.createElement('img');
+                        img.src = e.target.result;
+                        mediaContainer.appendChild(img);
+                        localStorage.setItem('mainLocalMediaSrc', e.target.result);
+                        localStorage.setItem('mainLocalMediaType', 'image');
+                    } else if(file.type.startsWith('video/')) {
+                        let video = document.createElement('video');
+                        video.src = e.target.result;
+                        video.controls = true;
+                        video.autoplay = true;
+                        video.muted = true;
+                        mediaContainer.appendChild(video);
+                        localStorage.setItem('mainLocalMediaSrc', e.target.result);
+                        localStorage.setItem('mainLocalMediaType', 'video');
                     }
-                } else if (selection === "شريط" || selection === "الشريط") {
-                    const newTickerText = prompt("أدخل النص الجديد للشريط الإعلاني العلوي المتحرك:");
-                    if (newTickerText) {
-                        if (isFirebaseConnected && database) {
-                            database.ref(`ads/ticker`).set(newTickerText)
-                            .then(() => alert("تم تحديث شريط الأخبار سحابياً بنجاح!"))
-                            .catch(err => alert("خطأ سحابي: " + err.message));
-                        } else {
-                            document.getElementById("ticker-ads").innerText = newTickerText;
-                            localStorage.setItem(`local_ad_ticker`, newTickerText);
-                            alert("تم تحديث الشريط العلوي المتحرك محلياً بنجاح!");
-                        }
-                    }
-                } else {
-                    alert("خيار غير صالح.");
                 }
-            } else {
+                reader.readAsDataURL(file);
+            }
+
+                        // ج. حفظ وتحديث أسعار الصرف (النشرة المركزية)
+            let newCurrency = document.getElementById('inputCurrencyMain').value;
+            if(newCurrency.trim() !== "") {
+                let textToShow = "النشرة المركزية: " + newCurrency;
+                document.getElementById('currencyMarqueeMain').innerText = textToShow;
+                localStorage.setItem('mainLocalCurrency', textToShow);
+            }
+
+            alert("تم حفظ التعديلات ونشرها وتثبيتها بنجاح في الواجهة!");
+            document.getElementById('adminPanelMain').style.display = 'none';
+            document.getElementById('inputMediaMain').value = ""; // تفريغ الخانة للرفع القادم
+        }
+
+        // دالة حذف الميديا والعودة للوضع الافتراضي بالواجهة الرئيسية
+        function clearMediaMain() {
+            if(confirm("هل أنت متأكد من حذف الصورة/الفيديو الحالية بالواجهة؟")) {
+                localStorage.removeItem('mainLocalMediaSrc');
+                localStorage.removeItem('mainLocalMediaType');
+                let mediaContainer = document.getElementById('mediaContainerMain');
+                mediaContainer.innerHTML = '<div class="no-media-main" id="noMediaTextMain">لم يتم رفع أي ميديا إعلانية بعد</div>';
+                alert("تم حذف ميديا الواجهة بنجاح!");
+                document.getElementById('adminPanelMain').style.display = 'none';
+            }
+        }
+
+        // 🔄 دالة تشغيل الجلب التلقائي للبيانات وتثبيتها بالواجهة فور فتح التطبيق
+         // 🔄 دالة جلب وتثبيت بيانات الواجهة تلقائياً فور فتح التطبيق
+        window.addEventListener('DOMContentLoaded', () => {
+            let savedDhikr = localStorage.getItem('mainLocalDhikr');
+            if(savedDhikr) {
+                document.getElementById('dhikrMarqueeMain').innerText = savedDhikr;
+            }
+
+            let savedCurrency = localStorage.getItem('mainLocalCurrency');
+            if(savedCurrency) {
+                document.getElementById('currencyMarqueeMain').innerText = savedCurrency;
+            }
+
+            let savedMediaSrc = localStorage.getItem('mainLocalMediaSrc');
+            let savedMediaType = localStorage.getItem('mainLocalMediaType');
+            if(savedMediaSrc && savedMediaType) {
+                let mediaContainer = document.getElementById('mediaContainerMain');
+                mediaContainer.innerHTML = ""; 
+                
+                if(savedMediaType === 'image') {
+                    let img = document.createElement('img');
+                    img.src = savedMediaSrc;
+                    mediaContainer.appendChild(img);
+                } else if(savedMediaType === 'video') {
+                    let video = document.createElement('video');
+                    video.src = savedMediaSrc;
+                    video.controls = true;
+                    video.autoplay = true;
+                    video.muted = true;
+                    mediaContainer.appendChild(video);
+                }
+            }
+        });
+
+        // 🛡️ دالة التحكم قفل الأمان القديمة المعدلة لتتوافق مع أشرطة الواجهة الحالية
+              // 🛡️ دالة التحكم قفل الأمان المحدثة لتتوافق تماماً مع أشرطة الواجهة الحالية
+            // 🛡️ الدالة النهائية الشاملة لفتح لوحة التحكم وإدارة الصور والفيديوهات والأشرطة فوراً
+        function triggerAdminLock() {
+            const accessKey = prompt("الرجاء إدخال رمز الأمان للوصول للوحة التحكم الكاملة:");
+            if (accessKey === "nayler1989") {
+                document.getElementById('adminPanelMain').style.display = 'block';
+                window.scrollTo({ top: 150, behavior: 'smooth' });
+                alert("تم التحقق بنجاح! يمكنك الآن استخدام لوحة التحكم بالأسفل لرفع الصور وتعديل الأشرطة.");
+            } else if (accessKey !== null) {
                 alert("رمز الأمان خاطئ! لا تملك الصلاحية.");
             }
         }
+
 
         function listenToAds() {
             if (isFirebaseConnected && database) {
