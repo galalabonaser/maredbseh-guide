@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المنصة التفاعلية الملكية الآمنة</title>
+    <!-- سيتم تضمين التنسيق المالي في الأجزاء التالية مباشرة -->
+</head>
+<body>
+
+    <!-- شاشة الدخول وتوثيق الحساب الفاخرة بقفل الأمان -->
+    <div id="auth-screen" class="modal-overlay">
+        <div class="auth-box">
+            <h2>🛡 نظام الدخول والتوثيق</h2>
+            <div id="auth-options">
+                <button class="btn-primary" onclick="showVerificationForm()">التوثيق فوراً (بالواتساب)</button>
+                <button class="btn-secondary" onclick="activate24HourGrace()">تفعيل مهلة 24 ساعة والدخول كزائر</button>
+            </div>
+            
+            <div id="verification-form" class="hidden">
+                <input type="text" id="auth-name" placeholder="الاسم الشخصي">
+                <input type="text" id="auth-phone" placeholder="رقم الواتساب (مثال: 9665xxxxx)">
+                <button class="btn-success" onclick="sendOTP()">إرسال كود التحقق (OTP)</button>
+            </div>
+
+            <div id="otp-form" class="hidden">
+                <p>أدخل رمز التحقق المرسل أو رمز المسؤول السري:</p>
+                <input type="text" id="otp-code" placeholder="رمز التحقق OTP / رمز المسؤول">
+                <button class="btn-success" onclick="verifyOTP()">تأكيد الدخول</button>
+            </div>
+        </div>
+    </div>
+    <!-- واجهة التطبيق الرئيسية الحديثة المحدثة بذكاء -->
+    <div id="app-container" class="hidden">
+        
+        <!-- شريط علوي ملكي مدمج يحتوي على الاسم والحالات وزر الملف الشخصي معاً -->
+        <header class="navbar-top">
+            <!-- اسمك المتلألئ على اليمين -->
+            <div class="nav-logo royal-gold-text">أستغفر الله</div>
+            
+            <!-- شريط الحالات العصرية الأنيق مدمج في منتصف الهيدر تماماً -->
+            <div class="header-stories-center">
+                <div class="story-card add-story" onclick="triggerStoryUpload()">
+                    <div class="story-thumb"><span>+</span></div>
+                    <span class="story-username">إضافة حالة</span>
+                    <input type="file" id="story-file-input" accept="image/*,video/*" class="hidden" onchange="uploadStory(event)">
+                </div>
+                <div id="stories-container" class="stories-flex"></div>
+            </div>
+            
+            <!-- زر ملفك الشخصي على اليسار -->
+            <div class="nav-actions">
+                <button class="btn-profile-toggle" onclick="toggleProfileView()">👤 ملفي الشخصي</button>
+            </div>
+        </header>
+
+        <!-- قسم عرض الملف الشخصي المطور مع لوحة المسؤول السرية واستخبارات الأمان -->
+        <div id="profile-view-section" class="profile-card-container hidden">
+            <div class="profile-header-card">
+                <div class="profile-avatar-wrapper">
+                    <img id="my-profile-img" src="data:image/svg+xml;utf8,<svg xmlns='http://w3.org' viewBox='0 0 24 24' fill='%23747d8c'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z'/></svg>" alt="الصورة الشخصية">
+                    <label for="profile-image-upload" class="avatar-change-btn">📸</label>
+                    <input type="file" id="profile-image-upload" accept="image/*" class="hidden" onchange="changeMyProfileAvatar(event)">
+                </div>
+                <h2 id="profile-display-name">جاري التحميل...</h2>
+                <div id="profile-display-usercode" class="user-code-badge" style="margin-bottom: 10px;"></div>
+                <p id="profile-display-phone" style="color: #747d8c; font-size: 14px; margin: 5px 0;"></p>
+                <!-- صندوق بلاغات المستخدمين لإرسال الشكاوى مباشرة للمسؤول -->
+                <div id="visitor-report-box" class="report-panel">
+                    <h4>📢 صندوق الشكاوى والتبليغ عن الإساءات</h4>
+                    <input type="text" id="report-target-code" placeholder="أدخل كود الشخص المسيء هنا (مثال: #A72B)...">
+                    <textarea id="report-text-content" placeholder="اكتب تفاصيل الإساءة والشتيمة هنا..." rows="2" style="width:100%; border-radius:8px; background:var(--input-bg); color:#fff; border:1px solid rgba(255,255,255,0.05); padding:10px; box-sizing:border-box; resize:none; font-family:inherit; font-size:13px;"></textarea>
+                    <button class="btn-success" onclick="submitReportFromVisitor()" style="width:100%; margin-top:8px; padding:8px;">إرسال التبليغ للمشرف العام 🚀</button>
+                </div>
+
+                <!-- لوحة تحكم استخباراتية سرية وخاصة بملفك أنت وحدك يا مشرف المنصة -->
+                <div id="admin-secret-panel" class="admin-system-box hidden">
+                    <h4 style="color:#f4d03f; border-bottom:1px solid rgba(244,208,63,0.2); padding-bottom:5px; margin-top:0;">🛡️ لوحة التحكم الأمنية السرية للمشرف</h4>
+                    <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; margin-bottom:15px;">
+                        <label style="font-size:12px; color:#ced6e0; display:block; margin-bottom:5px;">🔍 ابحث عن ملف المسيء عبر الكود الخاص به:</label>
+                        <div style="display:flex; gap:5px;">
+                            <input type="text" id="admin-search-code" placeholder="اكتب كود المسيء المراد إحضاره..." style="margin:0; padding:8px; width:100%; border-radius:6px; background:var(--input-bg); color:#fff; border:1px solid #444;">
+                            <button class="btn-primary" onclick="searchUserByCode()">إحضار</button>
+                        </div>
+                        <div id="admin-search-result" style="margin-top:10px; font-size:13px; text-align:right;"></div>
+                    </div>
+                    <h5>📥 قائمة الشكاوى والبلاغات الواردة:</h5>
+                    <div id="admin-reports-wrapper" style="max-height:150px; overflow-y:auto; font-size:12px; text-align:right;"></div>
+                </div>
+
+                <!-- عرض قائمة المتابعين الحقيقية داخل الحساب -->
+                <div class="followers-panel">
+                    <h4>👤 المتابعين النشطين (<span id="profile-followers-count">0</span>)</h4>
+                    <div id="profile-followers-list" class="followers-list-scroll"></div>
+                </div>
+                <button class="btn-secondary" onclick="toggleProfileView()" style="width:100%; margin-top:15px;">العودة للجدار العام ↩️</button>
+            </div>
+        </div>
+        <!-- المحتوى الرئيسي للمنصة بتوزيع التثبيت المستقر للمحاور الجانبية -->
+        <div class="main-layout">
+            
+            <!-- اللوحات الجانبية التفاعلية الثابتة تماماً عند النزول (الجهة اليمنى) -->
+            <aside class="sidebar-section">
+                <div class="sticky-sidebar-wrapper">
+                    <!-- الهوية الملكية الثابتة المتلألئة للمسؤول بدون تاج -->
+                    <div class="admin-fixed-card">
+                        <div class="royal-gold-container">
+                            <span class="royal-gold-text">أستغفر الله</span>
+                        </div>
+                        <div class="admin-subtitle">المشرف العام للمنصة</div>
+                        <div class="admin-followers">
+                            👤 المتابعين: <span id="admin-followers-count">0</span>
+                        </div>
+                    </div>
+
+                    <!-- لوحة أكثر المتفاعلين -->
+                    <div class="sidebar-card">
+                        <h4 class="sidebar-title">📊 الأكثر تفاعلاً</h4>
+                        <div id="top-interactions-list" class="sidebar-list"></div>
+                    </div>
+
+                    <!-- لوحة الأكثر نشراً -->
+                    <div class="sidebar-card">
+                        <h4 class="sidebar-title">📝 الأكثر نشراً (+3)</h4>
+                        <div id="top-publishers-list" class="sidebar-list"></div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- الجدار الرئيسي للمنشورات المتحرك (الجهة اليسرى والوسط) -->
+            <div class="feed-section">
+                                <!-- صندوق النشر المطور والبسيط (تحديث بم تفكر) -->
+                <div class="publish-box" style="background: var(--card-bg); border-radius: 18px; padding: 20px; border: 1px solid rgba(255,255,255,0.03); box-shadow: 0 8px 24px rgba(0,0,0,0.15);">
+                    <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: #fff; text-align: right;">بم تفكر؟</h3>
+                    <textarea id="post-text-input" placeholder="اكتب ما يدور في ذهنك هنا... ✨" rows="2" style="width: 100%; padding: 12px; box-sizing: border-box; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); background: var(--input-bg); color: #fff; font-size: 14px; resize: none; outline: none; margin-bottom: 12px; font-family: inherit;"></textarea>
+                    
+                    <div class="publish-controls" style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <label for="media-input" class="custom-file-upload" style="background: rgba(46, 213, 115, 0.1); color: #2ed573; border: 1px solid rgba(46, 213, 115, 0.2); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; display: inline-block;">📁 إضافة ملف (صورة / فيديو)</label>
+                            <input type="file" id="media-input" accept="image/*,video/*" onchange="previewMediaFile(event)" style="display: none;">
+                            <span id="file-chosen-name" class="file-name-hint" style="font-size: 12px; color: #747d8c; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">لم يتم اختيار ميديا</span>
+                        </div>
+                        <button onclick="createNewPost()" class="btn-publish" style="background: var(--accent-color); color: white; padding: 10px 24px; border-radius: 8px; border: none; font-size: 14px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(61, 90, 241, 0.2); width: auto;">نشر ✨</button>
+                    </div>
+                </div>
+
+                <div id="posts-wall"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- نظام طلبات المراسلة والخصوصية المنبثق الأنيق -->
+    <div id="chat-modal" class="modal-overlay hidden">
+        <div class="chat-box">
+            <h3 id="chat-title">المحادثة السريّة</h3>
+            <div id="chat-messages"></div>
+            <div id="chat-privacy-notice">🚨 لن يظهر للطرف الآخر علامة (Seen) إلا بعد الضغط على الموافقة وقبول المحادثة.</div>
+            <div id="chat-actions">
+                <button id="btn-approve-chat" class="btn-success" onclick="approveChat()">✅ موافقة وقبول المحادثة</button>
+            </div>
+            <div id="chat-input-area" class="hidden">
+                <input type="text" id="chat-msg-text" placeholder="اكتب رسالتك السريّة هنا...">
+                <button class="btn-primary" onclick="sendMessageActual()">إرسال 🚀</button>
+            </div>
+            <button onclick="closeChat()" class="btn-close" style="margin-top:10px;">إغلاق النافذة</button>
+        </div>
+    </div>
+<style>
+    :root {
+        --royal-gold: linear-gradient(90deg, #ffe066, #f5b041, #f4d03f, #ffe066);
+        --dark-bg: #0f1015;
+        --card-bg: #181922;
+        --input-bg: #222533;
+        --text-color: #f1f2f6;
+        --accent-color: #3d5af1;
+        --verified-blue: #00a2ff;
+        --magic-glow: 0 0 10px #00f3ff, 0 0 20px #00f3ff;
+    }
+
+    body { background-color: var(--dark-bg); color: var(--text-color); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+    .hidden { display: none !important; }
+
+    .navbar-top { 
+        display: flex; justify-content: space-between; align-items: center; 
+        background: var(--card-bg); padding: 10px 30px; border-bottom: 1px solid rgba(255,255,255,0.03); 
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 999; height: 95px; box-sizing: border-box;
+    }
+    .btn-profile-toggle { background: var(--accent-color); color: white; border-radius: 8px; font-weight: 600; padding: 10px 20px; border: none; cursor: pointer; }
+
+    .header-stories-center { flex: 1; display: flex; justify-content: center; overflow-x: auto; max-width: 60%; gap: 15px; padding: 0 10px; box-sizing: border-box; }
+    .header-stories-center::-webkit-scrollbar { height: 4px; }
+    .header-stories-center::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+    
+    .stories-flex { display: flex; gap: 15px; align-items: center; white-space: nowrap; flex-direction: row !important; }
+    .story-card { min-width: 85px; max-width: 85px; text-align: center; cursor: pointer; position: relative; transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .story-card:hover { transform: scale(1.05); }
+    .story-thumb { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--verified-blue); overflow: hidden; display: flex; align-items: center; justify-content: center; background: #222; box-shadow: 0 2px 6px rgba(0,0,0,0.3); box-sizing: border-box; }
+    .story-card.admin-story .story-thumb { border-color: #f4d03f; }
+    .story-thumb img, .story-thumb video { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .story-thumb span { font-size: 18px; font-weight: bold; color: var(--accent-color); line-height: 1; }
+    .story-username { font-size: 11px; color: #a4b0be; display: block; overflow: visible; text-overflow: unset; white-space: nowrap; width: auto; margin-top: 4px; font-weight: 600; text-align: center; }
+
+    /* ✅ تجميد وتثبيت اللوحات الجانبية على اليمين بشكل صارم ودائم عند النزول */
+    .sidebar-section { flex: 1; min-width: 320px; max-width: 320px; order: 2; position: sticky; top: 120px; height: fit-content; z-index: 900; }
+    .sticky-sidebar-wrapper { display: flex; flex-direction: column; gap: 20px; }
+
+    .main-layout { display: flex; gap: 25px; max-width: 1300px; margin: 0 auto; align-items: flex-start; padding: 25px 20px; box-sizing: border-box; }
+    .feed-section { flex: 2; display: flex; flex-direction: column; gap: 20px; order: 1; min-width: 0; }
+</style>
+<style>
+    .user-code-string { color: #57606f; font-family: monospace; font-size: 13px; font-weight: bold; margin-left: 5px; background: rgba(255,255,255,0.04); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.02); }
+    .user-code-badge { font-size: 14px; font-family: monospace; color: #ff9f43; font-weight: bold; background: rgba(255,159,67,0.1); display: inline-block; padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(255,159,67,0.2); }
+
+    .report-panel { margin-top: 15px; background: rgba(235,94,85,0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(235,94,85,0.1); text-align: right; }
+    .report-panel h4 { margin: 0 0 10px 0; font-size: 14px; color: #eb5e55; }
+    .report-panel input { width:100%; padding: 8px; margin-bottom: 8px; border-radius: 6px; background: var(--input-bg); color:#fff; border: 1px solid rgba(255,255,255,0.05); box-sizing: border-box; }
+    .admin-system-box { margin-top: 15px; background: #1c1d29; padding: 20px; border-radius: 14px; border: 1px solid rgba(244,208,63,0.3); }
+
+    .profile-card-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,11,15,0.95); display: flex; justify-content: center; align-items: center; z-index: 10000; padding: 20px; box-sizing: border-box; overflow-y: auto; }
+    .profile-header-card { background: var(--card-bg); border-radius: 20px; padding: 30px; text-align: center; width: 100%; max-width: 520px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+    .profile-avatar-wrapper { position: relative; width: 110px; height: 110px; margin: 0 auto 15px auto; }
+    .profile-avatar-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-color); }
+    .avatar-change-btn { position: absolute; bottom: 0; left: 0; background: #2f3542; padding: 6px; border-radius: 50%; cursor: pointer; font-size: 14px; }
+    .followers-panel { margin-top: 15px; text-align: right; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px; }
+    .followers-list-scroll { max-height: 120px; overflow-y: auto; }
+
+    .royal-gold-container { padding: 5px 12px; display: inline-block; border-radius: 8px; background: rgba(244, 208, 63, 0.1); border: 1px solid rgba(244, 208, 63, 0.2); }
+    .royal-gold-text { background: var(--royal-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; font-size: 1.4rem; letter-spacing: 0.5px; background-size: 200% auto; animation: gold-shine 2s linear infinite, gold-glow-pulse 1.5s infinite alternate; }
+    @keyframes gold-shine { to { background-position: 200% center; } }
+    @keyframes gold-glow-pulse { from { filter: drop-shadow(0 0 2px rgba(245, 176, 65, 0.6)); } to { filter: drop-shadow(0 0 8px rgba(244, 208, 63, 0.9)); } }
+
+    .magic-glow-user { color: #fff; font-weight: bold; text-shadow: var(--magic-glow); animation: pulseGlow 1.5s infinite alternate; }
+    @keyframes pulseGlow { from { text-shadow: 0 0 4px #00f3ff, 0 0 12px #00f3ff; } to { text-shadow: 0 0 12px #00f3ff, 0 0 20px #00f3ff; } }
+
+    .publish-box, .sidebar-card, .admin-fixed-card, .post-card { background: var(--card-bg); border-radius: 18px; padding: 25px; border: 1px solid rgba(255,255,255,0.03); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+    
+    .post-media-container { width: 100%; max-height: 520px; display: flex; justify-content: center; background: #0b0c10; border-radius: 12px; overflow: hidden; margin-top: 15px; }
+    .post-media-video, .post-media-img { width: 100%; height: auto; max-height: 520px; object-fit: contain; }
+
+    .interactions-bar { display: flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px; margin-top: 15px; }
+    .btn-interact { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.03); color: #a4b0be; font-size: 0.85rem; padding: 8px 14px; border-radius: 8px; display: flex; align-items: center; gap: 6px; border: none; cursor: pointer; }
+    .btn-interact:hover { background: rgba(255,255,255,0.07); color: #fff; }
+    .btn-interact span { font-weight: bold; color: #fff; }
+    .delete-btn { background: rgba(235, 94, 85, 0.15); color: #eb5e55; border: 1px solid rgba(235, 94, 85, 0.3); padding: 6px 12px; font-size: 12px; border-radius: 6px; cursor: pointer; }
+</style>
+<script>
+    const CONFIG = { adminName: "أستغفر الله", adminPass: "nayler1989" };
+    let currentUser = null; let posts = []; let stories = []; let blacklist = []; let activeChatUserId = null;
+
+    function checkBannedStatus() {
+        blacklist = JSON.parse(localStorage.getItem('db_blacklist_numbers') || '[]');
+        let currentSession = localStorage.getItem('current_user_session');
+        if (currentSession) {
+            let parsedUser = JSON.parse(currentSession);
+            if (blacklist.includes(parsedUser.phone) || blacklist.includes(parsedUser.userCode)) {
+                executeHardKick(); return true;
+            }
+        }
+        return false;
+    }
+
+    function executeHardKick() {
+        localStorage.removeItem('current_user_session');
+        document.body.innerHTML = `
+            <div style="text-align:center; padding:120px 20px; color:#ff4757; font-family:sans-serif; background:#0f1015; height:100vh; box-sizing:border-box;">
+                <div style="font-size:60px; margin-bottom:20px;">🚫</div>
+                <h1 style="font-size:28px; font-weight:800;">طرد وتجميد حظر أبدي صارم</h1>
+                <p style="color:#747d8c; font-size:16px; max-width:500px; margin:15px auto 0 auto; line-height:1.6;">لقد تم رصد معرّفك الرقمي ورقم هاتفك في قائمة الحظر الصارم الدائم، وتم تجميد حسابك وطرده نهائياً خارج خوادم التطبيق.</p>
+            </div>
+        `;
+        throw new Error("Banned user transaction terminated.");
+    }
+
+    function showVerificationForm() { document.getElementById('auth-options').classList.add('hidden'); document.getElementById('verification-form').classList.remove('hidden'); }
+    function generateUniqueUserCode() { let chars = 'ABCDEFFFGHJKLMNPQRSTUVWXYZ23456789'; let code = ''; for (let i = 0; i < 4; i++) { code += chars.charAt(Math.floor(Math.random() * chars.length)); } return '#' + code; }
+
+    function sendOTP() {
+        let name = document.getElementById('auth-name').value.trim(); let phone = document.getElementById('auth-phone').value.trim();
+        if(!name || !phone) return alert("يرجى إدخال الاسم ورقم الهاتف للمتابعة!");
+        blacklist = JSON.parse(localStorage.getItem('db_blacklist_numbers') || '[]');
+        if (blacklist.includes(phone)) { alert("🚫 حظر أبدي: هذا الرقم مدرج ضمن اللائحة السوداء الصارمة ولا يمكنه استقبال رموز تفعيل."); return; }
+        if (name === CONFIG.adminName) { bypassToAdmin(); return; }
+        localStorage.setItem('temp_reg_name', name); localStorage.setItem('temp_reg_phone', phone);
+        document.getElementById('verification-form').classList.add('hidden'); document.getElementById('otp-form').classList.remove('hidden');
+        alert("📢 رمز التحقق الفوري (OTP) المرسل لمحاكاتك بالواتساب هو: 123456");
+    }
+
+    function verifyOTP() {
+        let code = document.getElementById('otp-code').value.trim(); let tempName = localStorage.getItem('temp_reg_name'); let tempPhone = localStorage.getItem('temp_reg_phone');
+        if (code === CONFIG.adminPass || tempName === CONFIG.adminName) { bypassToAdmin(); return; }
+        if (code === "123456") {
+            let uniqueCode = generateUniqueUserCode();
+            let verifiedUser = { id: 'user_' + Date.now(), name: tempName, phone: tempPhone, userCode: uniqueCode, role: 'visitor', verified: true, avatar: null, joinDate: Date.now() };
+            completeUserLogin(verifiedUser);
+        } else { alert("کود التحقق غير صحيح، يرجى إعادة المحاولة!"); }
+    }
+
+    function activate24HourGrace() {
+        let uniqueCode = generateUniqueUserCode();
+        let guestUser = { id: 'guest_' + Math.floor(Math.random() * 10000), name: "زائر مؤقت_" + Math.floor(Math.random() * 100), phone: 'none', userCode: uniqueCode, role: 'visitor', verified: false, avatar: null, graceExpiry: Date.now() + (24 * 60 * 60 * 1000), joinDate: Date.now() };
+        completeUserLogin(guestUser);
+    }
+
+    function bypassToAdmin() { let adminUser = { id: 'admin_root', name: CONFIG.adminName, phone: 'admin_secure_line', userCode: '#ADMIN', role: 'admin', verified: true, avatar: null, joinDate: Date.now() }; completeUserLogin(adminUser); }
+    function completeUserLogin(userObj) {
+        currentUser = userObj; localStorage.setItem('current_user_session', JSON.stringify(userObj));
+        let globalUsers = JSON.parse(localStorage.getItem('db_global_users_map') || '{}');
+        globalUsers[userObj.userCode] = { id: userObj.id, name: userObj.name, phone: userObj.phone, role: userObj.role, avatar: userObj.avatar };
+        localStorage.setItem('db_global_users_map', JSON.stringify(globalUsers));
+        if (userObj.role !== 'admin') {
+            let followers = parseInt(localStorage.getItem('db_admin_followers_count') || '0'); localStorage.setItem('db_admin_followers_count', followers + 1);
+            let list = JSON.parse(localStorage.getItem('db_admin_followers_list') || '[]');
+            if(!list.some(u => u.id === userObj.id)) { list.push({ id: userObj.id, name: userObj.name, userCode: userObj.userCode, date: Date.now() }); localStorage.setItem('db_admin_followers_list', JSON.stringify(list)); }
+        }
+        document.getElementById('auth-screen').classList.add('hidden'); document.getElementById('app-container').classList.remove('hidden'); runPlatformEngine();
+    }
+
+    function previewMediaFile(event) { let input = event.target; let hint = document.getElementById('file-chosen-name'); if (input.files && input.files) { hint.innerText = "📁 الملف المختار جاهز: " + input.files.name; hint.style.color = "#2ed573"; } else { hint.innerText = "لم يتم اختيار ميديا بعد (اختياري)"; hint.style.color = "#747d8c"; } }
+
+       function createNewPost() {
+        let textInput = document.getElementById('post-text-input');
+        let mediaInput = document.getElementById('media-input');
+        let files = mediaInput ? mediaInput.files : null;
+        let postText = textInput ? textInput.value.trim() : "";
+
+        if(!postText && (!files || files.length === 0)) {
+            return alert("الرجاء كتابة شيء أو اختيار ملف للنشر عبر الصندوق!");
+        }
+
+        let proceedWithPost = function(mediaData, mediaType) {
+            let newPost = {
+                id: 'post_' + Date.now(),
+                authorId: currentUser.id,
+                authorName: currentUser.name,
+                authorCode: currentUser.userCode,
+                authorPhone: currentUser.phone,
+                authorRole: currentUser.role,
+                isVerified: currentUser.verified,
+                postText: postText,
+                mediaData: mediaData || null,
+                mediaType: mediaType || null,
+                likes: [], dislikes: [], loves: [],
+                comments: [],
+                timestamp: Date.now()
+            };
+            
+            posts.unshift(newPost);
+            syncAndRenderAll();
+            
+            if(textInput) textInput.value = '';
+            if(mediaInput) mediaInput.value = '';
+            let hint = document.getElementById('file-chosen-name');
+            if(hint) {
+                hint.innerText = "لم يتم اختيار ميديا";
+                hint.style.color = "#747d8c";
+            }
+        };
+
+        if(files && files.length > 0) {
+            let file = files[0];
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                proceedWithPost(e.target.result, file.type.startsWith('video') ? 'video' : 'image');
+            };
+            reader.readAsDataURL(file);
+        } else {
+            proceedWithPost(null, null);
+        }
+    }
+
+    function handleReaction(postId, type) {
+        let post = posts.find(p => p.id === postId);
+        if(!post) return;
+        if(!post[type].includes(currentUser.id)) {
+            post[type].push(currentUser.id);
+        } else {
+            post[type] = post[type].filter(id => id !== currentUser.id);
+        }
+        syncAndRenderAll();
+    }
+
+    function addNewCommentActual(postId) {
+        let input = document.getElementById(`comment-in-${postId}`);
+        let txt = input ? input.value.trim() : "";
+        if(!txt) return;
+
+        let post = posts.find(p => p.id === postId);
+        if(!post) return;
+
+        post.comments.push({
+            id: 'c_' + Date.now(),
+            commenterName: currentUser.name,
+            commenterCode: currentUser.userCode,
+            commenterRole: currentUser.role,
+            text: txt,
+            timestamp: Date.now()
+        });
+
+        if(input) input.value = '';
+        syncAndRenderAll();
+    }
+
+    function sharePostRealAction(postId) {
+        let original = posts.find(p => p.id === postId);
+        if(!original) return;
+        let sharedPost = {
+            id: 'post_shared_' + Date.now(),
+            authorId: currentUser.id,
+            authorName: currentUser.name,
+            authorCode: currentUser.userCode,
+            authorPhone: currentUser.phone,
+            authorRole: currentUser.role,
+            isVerified: currentUser.verified,
+            postText: original.postText,
+            mediaData: original.mediaData,
+            mediaType: original.mediaType,
+            likes: [], dislikes: [], loves: [],
+            comments: [],
+            timestamp: Date.now(),
+            isShared: true,
+            originalAuthor: original.authorName
+        };
+        posts.unshift(sharedPost);
+        alert("🔄 تم إعادة نشر هذا المنشور تلقائياً باسمك وكودك الرقمي على جدار المنصة!");
+        syncAndRenderAll();
+    }
+
+    function deletePostActual(postId) {
+        posts = posts.filter(p => p.id !== postId);
+        syncAndRenderAll();
+    }
+    function toggleProfileView() {
+        let section = document.getElementById('profile-view-section');
+        if(section) section.classList.toggle('hidden');
+        
+        if(section && !section.classList.contains('hidden')) {
+            document.getElementById('profile-display-name').innerText = currentUser.name;
+            document.getElementById('profile-display-usercode').innerText = "كود الحساب الثابت: " + currentUser.userCode;
+            document.getElementById('profile-display-phone').innerText = "رقم الواتساب: " + (currentUser.phone === 'none' ? 'حساب زائر غير موثق' : currentUser.phone);
+            
+            if(currentUser.avatar) {
+                document.getElementById('my-profile-img').src = currentUser.avatar;
+            }
+
+            let adminPanel = document.getElementById('admin-secret-panel');
+            let visitorBox = document.getElementById('visitor-report-box');
+            
+            if(currentUser.role === 'admin') {
+                if(adminPanel) adminPanel.classList.remove('hidden');
+                if(visitorBox) visitorBox.classList.add('hidden');
+                renderAdminReportsList();
+            } else {
+                if(adminPanel) adminPanel.classList.add('hidden');
+                if(visitorBox) visitorBox.classList.remove('hidden');
+            }
+
+            let followListContainer = document.getElementById('profile-followers-list');
+            let followCountSpan = document.getElementById('profile-followers-count');
+            
+            if(currentUser.role === 'admin') {
+                let followersList = JSON.parse(localStorage.getItem('db_admin_followers_list') || '[]');
+                if(followCountSpan) followCountSpan.innerText = localStorage.getItem('db_admin_followers_count') || '0';
+                
+                if(followListContainer) {
+                    if(followersList.length > 0) {
+                        followListContainer.innerHTML = '';
+                        followersList.forEach(u => {
+                            followListContainer.innerHTML += `<div>👤 <b>${u.name}</b> <span style="color:#ff9f43;">${u.userCode}</span> (تابعك تلقائياً)</div>`;
+                        });
+                    } else {
+                        followListContainer.innerHTML = '<p style="color:#747d8c; font-size:12px; margin:10px 0;">لا يوجد متابعين نشطين حالياً.</p>';
+                    }
+                }
+            } else {
+                if(followCountSpan) followCountSpan.innerText = "0";
+                if(followListContainer) followListContainer.innerHTML = '<p style="color:#747d8c; font-size:12px; margin:10px 0;">قائمة المتابعين التلقائية متاحة فقط للمشرف العام.</p>';
+            }
+        }
+    }
+
+    function submitReportFromVisitor() {
+        let targetCode = document.getElementById('report-target-code').value.trim();
+        let reportText = document.getElementById('report-text-content').value.trim();
+        
+        if(!targetCode || !reportText) return alert("الرجاء إدخال كود الشخص المسيء وتفاصيل الشكوى أولاً!");
+        if(targetCode === '#ADMIN' || targetCode === 'أستغفر الله') return alert("لا يمكنك تقديم شكوى ضد المشرف العام!");
+
+        let currentReports = JSON.parse(localStorage.getItem('db_platform_complaints') || '[]');
+        currentReports.push({
+            id: 'rep_' + Date.now(),
+            reporterName: currentUser.name,
+            reporterCode: currentUser.userCode,
+            bannedCodeTarget: targetCode,
+            details: reportText,
+            timestamp: Date.now()
+        });
+        
+        localStorage.setItem('db_platform_complaints', JSON.stringify(currentReports));
+        alert("🚀 تم إرسال بلاغك السري بنجاح إلى صندوق المشرف العام وجاري مراجعة كود المسيء لمعالجته وطره.");
+        
+        document.getElementById('report-target-code').value = '';
+        document.getElementById('report-text-content').value = '';
+    }
+
+    function renderAdminReportsList() {
+        let container = document.getElementById('admin-reports-wrapper');
+        let complaints = JSON.parse(localStorage.getItem('db_platform_complaints') || '[]');
+        if(!container) return;
+        if(complaints.length === 0) {
+            container.innerHTML = '<p style="color:#747d8c; margin:5px 0;">📥 لا توجد شكاوى أو بلاغات واردة حالياً.</p>';
+            return;
+        }
+        container.innerHTML = '';
+        complaints.forEach(r => {
+            container.innerHTML += `<div style="background:rgba(255,255,255,0.02); padding:8px; border-radius:6px; margin-bottom:6px; border:1px solid rgba(235,94,85,0.2);"><span style="color:#eb5e55;">⚠️ بلاغ ضد:</span> <b style="color:#ff9f43; background:rgba(0,0,0,0.4); padding:2px 4px; border-radius:4px; font-family:monospace;">${r.bannedCodeTarget}</b><br><span>الشاكي: ${r.reporterName} (${r.reporterCode})</span><br><p style="margin:4px 0 0 0; color:#ced6e0; font-size:11px; background:#121212; padding:5px; border-radius:4px;">السبب: ${r.details}</p></div>`;
+        });
+    }
+
+    function searchUserByCode() {
+        let code = document.getElementById('admin-search-code').value.trim();
+        let resultDiv = document.getElementById('admin-search-result');
+        if(!code) return alert("يرجى كتابة كود المستخدم المسيء للبحث عنه!");
+        let globalUsers = JSON.parse(localStorage.getItem('db_global_users_map') || '{}');
+        let user = globalUsers[code];
+        if(!resultDiv) return;
+        if(!user) {
+            resultDiv.innerHTML = '<span style="color:#ff4757;">❌ لم يتم العثور على أي مستخدم مسجل بهذا الكود!</span>';
+            return;
+        }
+        resultDiv.innerHTML = `<div style="background:rgba(0,0,0,0.4); padding:10px; border-radius:8px; border:1px solid #2ed573;"><b style="color:#fff;">الاسم: ${user.name}</b><br><span style="color:#747d8c; font-size:12px;">الرقم الحقيقي: ${user.phone}</span><br><button onclick="banUserPermanently('${user.phone}', '${code}')" style="background:#ff4757; color:white; width:100%; margin-top:8px; padding:6px; font-size:11px; border-radius:4px; cursor:pointer;">🚨 تطبيق الحظر الأبدي</button></div>`;
+    }
+
+    function changeMyProfileAvatar(event) {
+        let files = event.target.files;
+        if(files.length === 0) return;
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            currentUser.avatar = e.target.result;
+            localStorage.setItem('current_user_session', JSON.stringify(currentUser));
+            document.getElementById('my-profile-img').src = e.target.result;
+            let globalUsers = JSON.parse(localStorage.getItem('db_global_users_map') || '{}');
+            if(globalUsers[currentUser.userCode]) {
+                globalUsers[currentUser.userCode].avatar = e.target.result;
+                localStorage.setItem('db_global_users_map', JSON.stringify(globalUsers));
+            }
+            alert("📸 تم تحديث صورتك الشخصية بنجاح داخل النظام!");
+        };
+        reader.readAsDataURL(files[0]);
+    }
+    function uploadStory(event) {
+        let files = event.target.files;
+        if(!files || files.length === 0) return;
+        let file = files[0];
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            let newStory = { id: 'story_' + Date.now(), authorId: currentUser.id, authorName: currentUser.name, authorRole: currentUser.role, media: e.target.result, type: file.type.startsWith('video') ? 'video' : 'image', expiry: Date.now() + (8 * 60 * 60 * 1000) };
+            stories.push(newStory);
+            localStorage.setItem('db_platform_stories', JSON.stringify(stories));
+            renderStoriesSection();
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function renderStoriesSection() {
+        let now = Date.now(); stories = stories.filter(s => s.expiry > now); localStorage.setItem('db_platform_stories', JSON.stringify(stories));
+        let container = document.getElementById('stories-container'); if(!container) return; container.innerHTML = '';
+        stories.forEach(s => { let isAdminStory = s.authorRole === 'admin'; let isStoryOwner = s.authorId === currentUser.id; container.innerHTML += `<div class="story-card ${isAdminStory ? 'admin-story' : ''}"><div class="story-thumb">${s.type === 'video' ? `<video src="${s.media}" muted autoplay loop></video>` : `<img src="${s.media}">`}</div><span class="story-username ${isAdminStory ? 'royal-gold-text' : ''}">${s.authorName}</span>${isStoryOwner ? `<button onclick="deleteStoryActual('${s.id}')" style="font-size:9px; background:#ff4757; color:white; padding:2px 6px; display:block; margin:4px auto; border:none; border-radius:4px; cursor:pointer;">حذف</button>` : ''}</div>`; });
+    }
+
+    function deleteStoryActual(id) { stories = stories.filter(s => s.id !== id); localStorage.setItem('db_platform_stories', JSON.stringify(stories)); renderStoriesSection(); }
+    
+    function generateAuthorNameHTML(p) { 
+        if (p.authorRole === 'admin' || p.authorName === CONFIG.adminName) { return `<span class="royal-gold-text">أستغفر الله</span> <span class="user-code-string">${p.authorCode || '#ADMIN'}</span>`; } 
+        let userPostsCount = posts.filter(post => post.authorId === p.authorId).length; let badgeHTML = ''; let nameClass = ''; if (p.isVerified) badgeHTML += ` <span style="color:var(--verified-blue);" title="حساب موثق تلقائياً">🔵</span>`; if (userPostsCount >= 5) badgeHTML += ` <span title="شارة البرق المتوهج">⚡️</span>`; if (userPostsCount >= 15) badgeHTML += ` <span title="شارة المودة والاحترام">👑</span>`; if (userPostsCount >= 50) nameClass = 'magic-glow-user'; return `<span class="${nameClass}">${p.authorName}</span> <span class="user-code-string">${p.authorCode || '#ID'}</span>${badgeHTML}`; 
+    }
+    function syncAndRenderAll() {
+        if(checkBannedStatus()) return; localStorage.setItem('db_platform_posts', JSON.stringify(posts)); 
+        let countEl = document.getElementById('admin-followers-count'); if(countEl) countEl.innerText = localStorage.getItem('db_admin_followers_count') || '0';
+        let wall = document.getElementById('posts-wall'); if(!wall) return; wall.innerHTML = '';
+        posts.forEach(p => {
+            let isPostOwner = p.authorId === currentUser.id; let isUserAdmin = currentUser.role === 'admin'; let authorHeading = generateAuthorNameHTML(p);
+            let textHTML = p.postText ? `<div class="post-text-content" style="margin: 12px 0 5px 0; font-size: 15px; line-height: 1.5; color: #fff; white-space: pre-wrap; text-align: right;">${p.postText}</div>` : '';
+            let mediaHTML = p.mediaData ? `<div class="post-media-container">${p.mediaType === 'video' ? `<video class="post-media-video" src="${p.mediaData}" controls loop></video>` : `<img class="post-media-img" src="${p.mediaData}">`}</div>` : '';
+            let commentsHTML = ''; (p.comments || []).forEach(c => { let commenterHeading = c.commenterRole === 'admin' ? '<span class="royal-gold-text" style="font-size:12px;">أستغفر الله</span>' : `<b style="color:#ced6e0;">${c.commenterName}</b> <span class="user-code-string" style="font-size:10px;">${c.commenterCode || ''}</span>`; commentsHTML += `<div class="comment-item"><div>${commenterHeading}: <span style="color:#fff;">${c.text}</span></div></div>`; });
+            wall.innerHTML += `<div class="post-card"><div style="display:flex; justify-content:space-between; align-items:center;"><div>${authorHeading}${p.isShared ? `<small style="color:#747d8c; margin-right:5px; font-weight:500;">(معاد نشرها من ${p.originalAuthor})</small>` : ''}</div><div>${!isPostOwner ? `<button onclick="openChatRequest('${p.authorId}', '${p.authorName}')" style="background:#2f3542; color:#ced6e0; padding:5px 10px; font-size:12px; border-radius:6px; cursor:pointer;">💬 مراسلة</button>` : ''}${(isPostOwner || isUserAdmin) ? `<button class="delete-btn" onclick="deletePostActual('${p.id}')" style="margin-right:5px;">حذف 🗑</button>` : ''}</div></div>${textHTML}${mediaHTML}<div class="interactions-bar"><button class="btn-interact" onclick="handleReaction('${p.id}', 'likes')">👍 <span>${p.likes.length}</span></button><button class="btn-interact" onclick="handleReaction('${p.id}', 'dislikes')">👎 <span>${p.dislikes.length}</span></button><button class="btn-interact" onclick="handleReaction('${p.id}', 'loves')">❤️ <span>${p.loves.length}</span></button><button class="btn-interact">💬 <span>${(p.comments || []).length}</span></button><button class="btn-interact" onclick="sharePostRealAction('${p.id}')">🔄 مشاركة</button></div><div class="comments-section-wrapper"><div id="comments-box-${p.id}">${commentsHTML}</div><div class="comment-input-box"><input type="text" id="comment-in-${p.id}" placeholder="اكتب تعليقاً عاماً ليراه الجميع..."><button onclick="addNewCommentActual('${p.id}')">إرسال</button></div></div></div>`;
+        });
+        renderSidebarBoardsActual();
+    }
+
+    function banUserPermanently(phoneNum, userCode) { if (currentUser.role !== 'admin') return; blacklist = JSON.parse(localStorage.getItem('db_blacklist_numbers') || '[]'); if(phoneNum && !blacklist.includes(phoneNum)) blacklist.push(phoneNum); if(userCode && !blacklist.includes(userCode)) blacklist.push(userCode); localStorage.setItem('db_blacklist_numbers', JSON.stringify(blacklist)); alert(`🔒 تم حظر الحساب صاحب الكود [ ${userCode} ] حظراً أبدياً وصارماً، وتم تجميد بصمته وطره بنجاح.`); let r1 = document.getElementById('admin-search-result'); if(r1) r1.innerHTML = ''; let r2 = document.getElementById('admin-search-code'); if(r2) r2.value = ''; toggleProfileView(); syncAndRenderAll(); }
+    function renderSidebarBoardsActual() { let interactionList = document.getElementById('top-interactions-list'); let publishersList = document.getElementById('top-publishers-list'); if(!interactionList || !publishersList) return; interactionList.innerHTML = `<div style="border-right: 3px solid #f4d03f; padding-right:8px;">👑 <span class="royal-gold-text" style="font-size:1rem;">أستغفر الله</span> (المتفاعل الأول)</div>`; publishersList.innerHTML = `<div style="border-right: 3px solid #f4d03f; padding-right:8px;">👑 <span class="royal-gold-text" style="font-size:1rem;">أستغفر الله</span> (الناشر الأول)</div>`; let userPublishCount = {}; posts.forEach(p => { if(p.authorId !== 'admin_root') userPublishCount[p.authorName] = (userPublishCount[p.authorName] || 0) + 1; }); Object.keys(userPublishCount).forEach(name => { if (userPublishCount[name] >= 3) { publishersList.innerHTML += `<div>📝 <b>${name}</b> نشر: ${userPublishCount[name]} منشورات</div>`; } }); }
+    function openChatRequest(targetId, targetName) { activeChatUserId = targetId; let titleEl = document.getElementById('chat-title'); if(titleEl) titleEl.innerText = `طلب محادثة مع: ${targetName}`; let modalEl = document.getElementById('chat-modal'); if(modalEl) modalEl.classList.remove('hidden'); let chatData = JSON.parse(localStorage.getItem('chat_' + targetId) || '{"approved":false,"msgs":[]}'); let msgBox = document.getElementById('chat-messages'); if(!msgBox) return; msgBox.innerHTML = ''; chatData.msgs.forEach(m => { msgBox.innerHTML += `<div style="margin-bottom:8px; padding:8px 12px; background:#222533; border-radius:8px; font-size:14px;"><b>${m.sender}:</b> ${m.text}</div>`; }); let p1 = document.getElementById('chat-privacy-notice'); let a1 = document.getElementById('chat-actions'); let i1 = document.getElementById('chat-input-area'); if(chatData.approved) { if(p1) p1.classList.add('hidden'); if(a1) a1.classList.add('hidden'); if(i1) i1.classList.remove('hidden'); } else { if(p1) p1.classList.remove('hidden'); if(a1) a1.classList.remove('hidden'); if(i1) i1.classList.add('hidden'); } }
+    function approveChat() { let chatData = JSON.parse(localStorage.getItem('chat_' + activeChatUserId) || '{"approved":false,"msgs":[]}'); chatData.approved = true; localStorage.setItem('chat_' + activeChatUserId, JSON.stringify(chatData)); openChatRequest(activeChatUserId, "المستخدم"); }
+    function sendMessageActual() { let input = document.getElementById('chat-msg-text'); let txt = input ? input.value.trim() : ""; if(!txt) return; let chatData = JSON.parse(localStorage.getItem('chat_' + activeChatUserId) || '{"approved":true,"msgs":[]}'); chatData.msgs.push({ sender: currentUser.name, text: txt }); localStorage.setItem('chat_' + activeChatUserId, JSON.stringify(chatData)); if(input) input.value = ''; openChatRequest(activeChatUserId, "المستخدم"); }
+    function closeChat() { let modalEl = document.getElementById('chat-modal'); if(modalEl) modalEl.classList.add('hidden'); } function triggerStoryUpload() { let fileEl = document.getElementById('story-file-input'); if(fileEl) fileEl.click(); }
+    function runPlatformEngine() { posts = JSON.parse(localStorage.getItem('db_platform_posts') || '[]'); stories = JSON.parse(localStorage.getItem('db_platform_stories') || '[]'); renderStoriesSection(); syncAndRenderAll(); }
+
+    window.onload = function() {
+        if(checkBannedStatus()) return;
+        let cachedSession = localStorage.getItem('current_user_session');
+        if (cachedSession) { currentUser = JSON.parse(cachedSession); let authEl = document.getElementById('auth-screen'); if(authEl) authEl.classList.add('hidden'); let appEl = document.getElementById('app-container'); if(appEl) appEl.classList.remove('hidden'); runPlatformEngine(); }
+    };
+</script>
+</body>
+</html>
