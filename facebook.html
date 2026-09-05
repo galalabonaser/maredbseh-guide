@@ -244,7 +244,8 @@
     .btn-interact span { font-weight: bold; color: #fff; }
     .delete-btn { background: rgba(235, 94, 85, 0.15); color: #eb5e55; border: 1px solid rgba(235, 94, 85, 0.3); padding: 6px 12px; font-size: 12px; border-radius: 6px; cursor: pointer; }
 </style>
-<script>
+<script type="module">
+import { database, ref, set, push, onValue, remove, update } from "./firebase.js";
     const CONFIG = { adminName: "أستغفر الله", adminPass: "nayler1989" };
     let currentUser = null; let posts = []; let stories = []; let blacklist = []; let activeChatUserId = null;
 
